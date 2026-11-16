@@ -23,6 +23,19 @@
 <body>
   <header class="site-header">
     <a class="skip" href="#contenido" data-i18n="skip">Saltar al contenido</a>
+    <nav class="social" aria-label="Social">
+      <ul>
+        <li>
+          <a href="https://www.instagram.com/spectrumpatronum.es" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+              <rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"></rect>
+              <circle cx="12" cy="12" r="4.15" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
+              <circle cx="17.35" cy="6.65" r="1.05" fill="currentColor"></circle>
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
     <div class="lang">
       <button type="button" class="lang-btn" id="lang-btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-menu" aria-label="Elegir idioma" data-i18n-aria="lang.label">
         <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
@@ -41,6 +54,9 @@
 
   <main id="contenido">
     <section class="hero" aria-labelledby="wordmark">
+      <div id="proyectos" class="page-anchor"></div>
+      <div id="eventos" class="page-anchor"></div>
+      <div id="contacto" class="page-anchor"></div>
       <h1 class="lockup" id="wordmark" aria-label="Spectrum Patronum">
         <span class="brand" aria-hidden="true">
           <span class="word">
@@ -65,29 +81,12 @@
         </ul>
       </nav>
     </section>
-
-    <section class="section" id="proyectos" aria-labelledby="projects-title">
-      <h2 id="projects-title" data-i18n="nav.projects">Proyectos</h2>
-      <p data-i18n="projects.body">Aquí publicaremos los proyectos de la asociación.</p>
-    </section>
-
-    <section class="section" id="eventos" aria-labelledby="events-title">
-      <h2 id="events-title" data-i18n="nav.events">Eventos</h2>
-      <p data-i18n="events.body">El calendario de conciertos y actividades se anunciará en esta sección.</p>
-    </section>
-
-    <section class="section" id="contacto" aria-labelledby="contact-title">
-      <h2 id="contact-title" data-i18n="nav.contact">Contacto</h2>
-      <p data-i18n="contact.body">Los datos de contacto se publicarán próximamente.</p>
-    </section>
   </main>
 
   <footer class="site-footer">
     <p class="footer-name">Associació Spectrum Patronum</p>
     <p data-i18n="footer.note">Asociación cultural sin ánimo de lucro · Barcelona</p>
     <p class="legal-links">
-      <a href="aviso-legal.html" data-i18n="legal.notice">Aviso legal</a>
-      <span aria-hidden="true"> · </span>
       <a href="privacidad.html" data-i18n="legal.privacy">Privacidad</a>
     </p>
   </footer>
