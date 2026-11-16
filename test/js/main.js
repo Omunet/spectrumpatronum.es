@@ -57,9 +57,6 @@
   };
 
   var current = "es";
-  var header = document.querySelector(".site-header");
-  var nav = document.getElementById("site-nav");
-  var navToggle = document.querySelector(".nav-toggle");
   var lang = document.querySelector(".lang");
   var langBtn = document.getElementById("lang-btn");
   var langMenu = document.getElementById("lang-menu");
@@ -81,7 +78,6 @@
       var key = el.getAttribute("data-i18n-aria");
       if (t[key] != null) el.setAttribute("aria-label", t[key]);
     });
-    syncNavLabel();
     langOptions.forEach(function (btn) {
       btn.setAttribute("aria-selected", btn.getAttribute("data-lang") === next ? "true" : "false");
     });
@@ -93,43 +89,15 @@
     } catch (e) {}
   }
 
-  function syncNavLabel() {
-    var open = navToggle.getAttribute("aria-expanded") === "true";
-    navToggle.setAttribute("aria-label", I18N[current][open ? "nav.close" : "nav.open"]);
-  }
-
-  function closeNav() {
-    nav.classList.remove("is-open");
-    navToggle.setAttribute("aria-expanded", "false");
-    syncNavLabel();
-  }
-
-  function openNav() {
-    closeLang();
-    nav.classList.add("is-open");
-    navToggle.setAttribute("aria-expanded", "true");
-    syncNavLabel();
-  }
-
   function closeLang() {
     langMenu.hidden = true;
     langBtn.setAttribute("aria-expanded", "false");
   }
 
   function openLang() {
-    closeNav();
     langMenu.hidden = false;
     langBtn.setAttribute("aria-expanded", "true");
   }
-
-  navToggle.addEventListener("click", function () {
-    if (nav.classList.contains("is-open")) closeNav();
-    else openNav();
-  });
-
-  nav.querySelectorAll("a").forEach(function (link) {
-    link.addEventListener("click", closeNav);
-  });
 
   langBtn.addEventListener("click", function () {
     if (langMenu.hidden) openLang();
@@ -177,7 +145,6 @@
 
   document.addEventListener("click", function (e) {
     if (!lang.contains(e.target)) closeLang();
-    if (!header.contains(e.target)) closeNav();
   });
 
   document.addEventListener("keydown", function (e) {
@@ -185,16 +152,7 @@
     if (!langMenu.hidden) {
       closeLang();
       langBtn.focus();
-      return;
     }
-    if (nav.classList.contains("is-open")) {
-      closeNav();
-      navToggle.focus();
-    }
-  });
-
-  window.addEventListener("resize", function () {
-    if (window.innerWidth > 760) closeNav();
   });
 
   var stored = null;

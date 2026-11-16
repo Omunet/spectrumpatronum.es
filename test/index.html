@@ -26,16 +26,6 @@
 <body>
   <header class="site-header">
     <a class="skip" href="#contenido" data-i18n="skip">Saltar al contenido</a>
-    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Abrir el menú">
-      <span class="nav-toggle-bars" aria-hidden="true"></span>
-    </button>
-    <nav id="site-nav" aria-label="Navegación principal" data-i18n-aria="nav.label">
-      <ul>
-        <li><a href="#proyectos" data-i18n="nav.projects">Proyectos</a></li>
-        <li><a href="#eventos" data-i18n="nav.events">Eventos</a></li>
-        <li><a href="#contacto" data-i18n="nav.contact">Contacto</a></li>
-      </ul>
-    </nav>
     <div class="lang">
       <button type="button" class="lang-btn" id="lang-btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-menu" aria-label="Elegir idioma" data-i18n-aria="lang.label">
         <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
@@ -70,7 +60,13 @@
           </span>
         </span>
       </h1>
-      <p class="tagline" data-i18n="tagline">Asociación cultural sin ánimo de lucro en Barcelona. Música electrónica, cultura DJ, producción musical, música en directo y artes escénicas y visuales.</p>
+      <nav id="site-nav" aria-label="Navegación principal" data-i18n-aria="nav.label">
+        <ul>
+          <li><a href="#proyectos" data-i18n="nav.projects">Proyectos</a></li>
+          <li><a href="#eventos" data-i18n="nav.events">Eventos</a></li>
+          <li><a href="#contacto" data-i18n="nav.contact">Contacto</a></li>
+        </ul>
+      </nav>
     </section>
 
     <section class="section" id="proyectos" aria-labelledby="projects-title">
