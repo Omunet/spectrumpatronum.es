@@ -1,1 +1,98 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Spectrum Patronum</title><style>html,body{height:100%;margin:0}body{display:flex;align-items:center;justify-content:center;background:#0b0b12;color:#eee;font-family:system-ui,sans-serif;text-align:center}h1{font-weight:300;letter-spacing:.2em}</style></head><body><div><h1>SPECTRUM PATRONUM</h1><p>Coming soon</p></div></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spectrum Patronum — Asociación cultural</title>
+  <meta name="description" content="Associació Spectrum Patronum es una asociación cultural sin ánimo de lucro en Barcelona que promueve la música electrónica, la cultura DJ, la producción musical, la música en directo y las artes escénicas y visuales.">
+  <meta name="theme-color" content="#0B0710">
+  <meta name="color-scheme" content="dark">
+  <link rel="icon" href="assets/sp-logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>html,body{background:#0B0710;color:#F3EEE6}</style>
+  <script>
+    try {
+      var savedLang = localStorage.getItem("sp-lang");
+      if (savedLang === "es" || savedLang === "ca" || savedLang === "en") {
+        document.documentElement.lang = savedLang;
+      }
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="skip" href="#contenido" data-i18n="skip">Saltar al contenido</a>
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Abrir el menú">
+      <span class="nav-toggle-bars" aria-hidden="true"></span>
+    </button>
+    <nav id="site-nav" aria-label="Navegación principal" data-i18n-aria="nav.label">
+      <ul>
+        <li><a href="#proyectos" data-i18n="nav.projects">Proyectos</a></li>
+        <li><a href="#eventos" data-i18n="nav.events">Eventos</a></li>
+        <li><a href="#contacto" data-i18n="nav.contact">Contacto</a></li>
+      </ul>
+    </nav>
+    <div class="lang">
+      <button type="button" class="lang-btn" id="lang-btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-menu" aria-label="Elegir idioma" data-i18n-aria="lang.label">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="8.25" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
+          <path d="M3.75 12h16.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+          <path d="M12 3.75c2.35 2.55 3.55 5.35 3.55 8.25s-1.2 5.7-3.55 8.25c-2.35-2.55-3.55-5.35-3.55-8.25s1.2-5.7 3.55-8.25z" fill="none" stroke="currentColor" stroke-width="1.6"></path>
+        </svg>
+      </button>
+      <ul class="lang-menu" id="lang-menu" role="listbox" aria-labelledby="lang-btn" hidden>
+        <li role="none"><button type="button" role="option" lang="es" data-lang="es" aria-selected="true">Español</button></li>
+        <li role="none"><button type="button" role="option" lang="ca" data-lang="ca" aria-selected="false">Català</button></li>
+        <li role="none"><button type="button" role="option" lang="en" data-lang="en" aria-selected="false">English</button></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="hero" aria-labelledby="wordmark">
+      <h1 class="lockup" id="wordmark" aria-label="Spectrum Patronum">
+        <span class="brand" aria-hidden="true">
+          <span class="word">
+            <span class="letters"><span aria-hidden="true">S</span><span aria-hidden="true">p</span><span aria-hidden="true">e</span><span aria-hidden="true">c</span><span aria-hidden="true">t</span><span aria-hidden="true">r</span><span aria-hidden="true">u</span><span aria-hidden="true">m</span></span>
+          </span>
+          <span class="logo">
+            <img class="logo-still" src="assets/sp-logo.svg" alt="" width="240" height="240">
+            <video class="logo-motion" autoplay muted loop playsinline webkit-playsinline width="240" height="240" tabindex="-1">
+              <source src="assets/sp-logo-heartbeat.mp4" type="video/mp4">
+            </video>
+          </span>
+          <span class="word">
+            <span class="letters"><span aria-hidden="true">P</span><span aria-hidden="true">a</span><span aria-hidden="true">t</span><span aria-hidden="true">r</span><span aria-hidden="true">o</span><span aria-hidden="true">n</span><span aria-hidden="true">u</span><span aria-hidden="true">m</span></span>
+          </span>
+        </span>
+      </h1>
+      <p class="tagline" data-i18n="tagline">Asociación cultural sin ánimo de lucro en Barcelona. Música electrónica, cultura DJ, producción musical, música en directo y artes escénicas y visuales.</p>
+    </section>
+
+    <section class="section" id="proyectos" aria-labelledby="projects-title">
+      <h2 id="projects-title" data-i18n="nav.projects">Proyectos</h2>
+      <p data-i18n="projects.body">Aquí publicaremos los proyectos de la asociación.</p>
+    </section>
+
+    <section class="section" id="eventos" aria-labelledby="events-title">
+      <h2 id="events-title" data-i18n="nav.events">Eventos</h2>
+      <p data-i18n="events.body">El calendario de conciertos y actividades se anunciará en esta sección.</p>
+    </section>
+
+    <section class="section" id="contacto" aria-labelledby="contact-title">
+      <h2 id="contact-title" data-i18n="nav.contact">Contacto</h2>
+      <p data-i18n="contact.body">Los datos de contacto se publicarán próximamente.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p class="footer-name">Associació Spectrum Patronum</p>
+    <p data-i18n="footer.note">Asociación cultural sin ánimo de lucro · Barcelona</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
