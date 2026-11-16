@@ -17,7 +17,7 @@
       "footer.note": "Asociación cultural sin ánimo de lucro · Barcelona",
       "legal.privacy": "Privacidad",
       "privacy.title": "Política de privacidad — Spectrum Patronum",
-      "privacy.description": "Política de privacidad de Associació Spectrum Patronum. El sitio no utiliza cookies, analítica ni publicidad.",
+      "privacy.description": "Este sitio no utiliza formularios, cookies, analítica ni publicidad, y no recoge datos personales de forma directa.",
       "privacy.heading": "Política de privacidad"
     },
     ca: {
@@ -34,7 +34,7 @@
       "footer.note": "Associació cultural sense ànim de lucre · Barcelona",
       "legal.privacy": "Privacitat",
       "privacy.title": "Política de privacitat — Spectrum Patronum",
-      "privacy.description": "Política de privacitat d'Associació Spectrum Patronum. El lloc no utilitza galetes, analítica ni publicitat.",
+      "privacy.description": "Aquest lloc no utilitza formularis, galetes, analítica ni publicitat, i no recull dades personals de manera directa.",
       "privacy.heading": "Política de privacitat"
     },
     en: {
@@ -51,7 +51,7 @@
       "footer.note": "Non-profit cultural association · Barcelona",
       "legal.privacy": "Privacy",
       "privacy.title": "Privacy policy — Spectrum Patronum",
-      "privacy.description": "Privacy policy of Associació Spectrum Patronum. This site uses no cookies, analytics or ads.",
+      "privacy.description": "This site uses no forms, cookies, analytics or advertising, and does not collect personal data directly.",
       "privacy.heading": "Privacy policy"
     }
   };
