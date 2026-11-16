@@ -13,6 +13,11 @@
       "nav.projects": "Proyectos",
       "nav.events": "Eventos",
       "nav.contact": "Contacto",
+      "icon.nav": "Menú",
+      "icon.home": "Inicio",
+      "icon.projects": "Proyectos",
+      "icon.events": "Eventos",
+      "icon.contact": "Contacto",
       "lang.label": "Elegir idioma",
       "footer.note": "Asociación cultural sin ánimo de lucro · Barcelona",
       "legal.privacy": "Privacidad",
@@ -30,6 +35,11 @@
       "nav.projects": "Projectes",
       "nav.events": "Esdeveniments",
       "nav.contact": "Contacte",
+      "icon.nav": "Menú",
+      "icon.home": "Inici",
+      "icon.projects": "Projectes",
+      "icon.events": "Esdeveniments",
+      "icon.contact": "Contacte",
       "lang.label": "Tria l'idioma",
       "footer.note": "Associació cultural sense ànim de lucre · Barcelona",
       "legal.privacy": "Privacitat",
@@ -47,6 +57,11 @@
       "nav.projects": "Projects",
       "nav.events": "Events",
       "nav.contact": "Contact",
+      "icon.nav": "Menu",
+      "icon.home": "Home",
+      "icon.projects": "Projects",
+      "icon.events": "Events",
+      "icon.contact": "Contact",
       "lang.label": "Choose language",
       "footer.note": "Non-profit cultural association · Barcelona",
       "legal.privacy": "Privacy",
@@ -83,6 +98,10 @@
     document.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
       var key = el.getAttribute("data-i18n-aria");
       if (t[key] != null) el.setAttribute("aria-label", t[key]);
+    });
+    document.querySelectorAll("[data-i18n-title]").forEach(function (el) {
+      var key = el.getAttribute("data-i18n-title");
+      if (t[key] != null) el.setAttribute("title", t[key]);
     });
     langOptions.forEach(function (btn) {
       btn.setAttribute("aria-selected", btn.getAttribute("data-lang") === next ? "true" : "false");
@@ -167,6 +186,32 @@
   } catch (e) {}
   if (stored === "es" || stored === "ca" || stored === "en") apply(stored);
   else apply("es");
+
+  var IG_WEB = "https://www.instagram.com/spectrumpatronum.es";
+  var IG_APP = "instagram://user?username=spectrumpatronum.es";
+
+  function isPhone() {
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+  }
+
+  document.querySelectorAll(".js-instagram").forEach(function (link) {
+    link.addEventListener("click", function (e) {
+      if (!isPhone()) return;
+      e.preventDefault();
+      var left = false;
+      function gone() { left = true; }
+      document.addEventListener("visibilitychange", gone);
+      window.addEventListener("pagehide", gone);
+      window.location.href = IG_APP;
+      setTimeout(function () {
+        document.removeEventListener("visibilitychange", gone);
+        window.removeEventListener("pagehide", gone);
+        if (!left && document.visibilityState === "visible") {
+          window.location.href = IG_WEB;
+        }
+      }, 1000);
+    });
+  });
 
   var video = document.querySelector(".logo-motion");
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
