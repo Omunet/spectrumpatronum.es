@@ -18,7 +18,15 @@
       "projects.body": "Aquí publicaremos los proyectos de la asociación.",
       "events.body": "El calendario de conciertos y actividades se anunciará en esta sección.",
       "contact.body": "Los datos de contacto se publicarán próximamente.",
-      "footer.note": "Asociación cultural sin ánimo de lucro · Barcelona"
+      "footer.note": "Asociación cultural sin ánimo de lucro · Barcelona",
+      "legal.notice": "Aviso legal",
+      "legal.privacy": "Privacidad",
+      "notice.title": "Aviso legal — Spectrum Patronum",
+      "notice.description": "Aviso legal de Associació Spectrum Patronum, en cumplimiento del artículo 10 de la Ley 34/2002 (LSSI-CE).",
+      "notice.heading": "Aviso legal",
+      "privacy.title": "Política de privacidad — Spectrum Patronum",
+      "privacy.description": "Política de privacidad de Associació Spectrum Patronum. El sitio no utiliza cookies, analítica ni publicidad.",
+      "privacy.heading": "Política de privacidad"
     },
     ca: {
       "meta.title": "Spectrum Patronum — Associació cultural",
@@ -35,7 +43,15 @@
       "projects.body": "Aquí publicarem els projectes de l'associació.",
       "events.body": "El calendari de concerts i activitats s'anunciarà en aquesta secció.",
       "contact.body": "Les dades de contacte es publicaran properament.",
-      "footer.note": "Associació cultural sense ànim de lucre · Barcelona"
+      "footer.note": "Associació cultural sense ànim de lucre · Barcelona",
+      "legal.notice": "Avís legal",
+      "legal.privacy": "Privacitat",
+      "notice.title": "Avís legal — Spectrum Patronum",
+      "notice.description": "Avís legal d'Associació Spectrum Patronum, en compliment de l'article 10 de la Llei 34/2002 (LSSI-CE).",
+      "notice.heading": "Avís legal",
+      "privacy.title": "Política de privacitat — Spectrum Patronum",
+      "privacy.description": "Política de privacitat d'Associació Spectrum Patronum. El lloc no utilitza galetes, analítica ni publicitat.",
+      "privacy.heading": "Política de privacitat"
     },
     en: {
       "meta.title": "Spectrum Patronum — Cultural association",
@@ -52,7 +68,15 @@
       "projects.body": "The association’s projects will be published here.",
       "events.body": "The calendar of concerts and activities will be announced in this section.",
       "contact.body": "Contact details will be published soon.",
-      "footer.note": "Non-profit cultural association · Barcelona"
+      "footer.note": "Non-profit cultural association · Barcelona",
+      "legal.notice": "Legal notice",
+      "legal.privacy": "Privacy",
+      "notice.title": "Legal notice — Spectrum Patronum",
+      "notice.description": "Legal notice of Associació Spectrum Patronum, under Article 10 of Spanish Law 34/2002 (LSSI-CE).",
+      "notice.heading": "Legal notice",
+      "privacy.title": "Privacy policy — Spectrum Patronum",
+      "privacy.description": "Privacy policy of Associació Spectrum Patronum. This site uses no cookies, analytics or ads.",
+      "privacy.heading": "Privacy policy"
     }
   };
 
@@ -68,8 +92,14 @@
     if (!t) return;
     current = next;
     document.documentElement.lang = next;
-    document.title = t["meta.title"];
-    if (desc) desc.setAttribute("content", t["meta.description"]);
+    var page = document.body.getAttribute("data-page");
+    var titleKey = page ? page + ".title" : "meta.title";
+    var descKey = page ? page + ".description" : "meta.description";
+    document.title = t[titleKey] || t["meta.title"];
+    if (desc && t[descKey]) desc.setAttribute("content", t[descKey]);
+    document.querySelectorAll("[data-lang-block]").forEach(function (el) {
+      el.hidden = el.getAttribute("data-lang-block") !== next;
+    });
     document.querySelectorAll("[data-i18n]").forEach(function (el) {
       var key = el.getAttribute("data-i18n");
       if (t[key] != null) el.textContent = t[key];
