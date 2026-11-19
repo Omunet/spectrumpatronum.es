@@ -2,35 +2,46 @@
 
 ## Events
 
-The events page draws its own month view from [`events/events.json`](events/events.json). Visitors can only browse. An event shows the date, time, place, a map link, and a ticket link when there is one. Nothing on the page embeds Google Calendar, names it, or links to an event’s Google page.
+The events page is the site’s own month view. It reads the public Google Calendar of the **spectrumpatronumbcn** account in the browser. Visitors can only browse. An event shows the date, time, place, a map link, and a ticket link when the description contains one. The page does not embed Google Calendar and does not link to an event’s Google page.
 
-To fill the calendar from Google Calendar, make that calendar public and put its id in [`events/calendar.json`](events/calendar.json):
+Until the two values in [`events/config.js`](events/config.js) are filled in, every month shows “No hay eventos este mes.” That file is the only configuration spot.
 
-```json
-{ "calendarId": "your-id@group.calendar.google.com" }
-```
+### 1. Make the calendar public
 
-Use the public calendar id, not a private ical secret. The workflow `.github/workflows/sync-calendar.yml` reads the public feed and rewrites `events.json`. It runs every hour and can be started by hand. While `calendarId` is empty, the example events already in `events.json` stay as they are.
+1. Sign in to Google Calendar as **spectrumpatronumbcn**.
+2. Open the calendar that should appear on the site.
+3. Go to **Settings → Access permissions for events**.
+4. Turn on **Make available to public**.
+5. Choose **See all event details**.
 
-You can also edit `events.json` by hand. The layout does not need to change.
+### 2. Copy the Calendar ID
 
-Each event is one object:
+1. In that same calendar’s settings, open **Integrate calendar**.
+2. Copy **Calendar ID**.
+3. Paste it into `calendarId` in `events/config.js`, replacing `YOUR_CALENDAR_ID`.
 
-```json
-{
-  "title": "Example event",
-  "start": "2026-11-21T21:00:00",
-  "end": "2026-11-22T02:00:00",
-  "venue": "Example venue",
-  "address": "Example address",
-  "city": "Example city",
-  "ticketUrl": "https://example.com/tickets",
-  "description": "Optional short text.",
-  "image": "/assets/events/optional.jpg",
-  "imageAlt": "Optional description of the image."
-}
-```
+### 3. Create a browser API key
 
-`start` is the local date and time, written as `YYYY-MM-DDTHH:MM:SS`, with no timezone suffix. `end` is optional and uses the same form. `description`, `image`, and `imageAlt` are optional. `ticketUrl` is the ticket page. The site opens it in a new tab. A map link is built from the venue, address, and city.
+The public ICS feed cannot be read from the page (the browser blocks it). The page uses Calendar API `events.list` instead, which needs a browser key.
 
-The three entries already in the file are examples. Replace them when real dates are ready. Keep `"example": true` only on placeholders. That shows an Example label in the event details.
+1. In [Google Cloud Console](https://console.cloud.google.com/), create or choose a project.
+2. Enable **Google Calendar API**.
+3. Go to **APIs & Services → Credentials → Create credentials → API key**.
+4. Edit the key. Under **Application restrictions**, choose **HTTP referrers** and add:
+   - `https://spectrumpatronum.es/*`
+   - `https://www.spectrumpatronum.es/*`
+5. Under **API restrictions**, restrict the key to **Google Calendar API**.
+6. Paste the key into `apiKey` in `events/config.js`, replacing `YOUR_BROWSER_API_KEY`.
+
+Reload the site. Events from about one month back through the following year appear on their days.
+
+### 4. Add an event
+
+Create the event in that Google Calendar.
+
+- **Title** is the name on the calendar.
+- **Start** and **end** are the date and time. An all-day event stays all day.
+- **Location** is the venue. The page turns it into the map link.
+- **Description** can hold the ticket link. Put it on its own line, for example `Tickets: https://example.com/tickets`. If there is no line like that, the first URL in the description is used. The link opens in a new tab.
+
+Nothing else in the layout needs to change, and there is no login on the site.

@@ -138,11 +138,12 @@
     </div>
   </div>
 
+  <script src="/events/config.js"></script>
   <script src="/js/main.js"></script>
   <script>
-    /* Month view. Event copy lives in /events/events.json — see README.md.
-       That file can be filled from a public Google Calendar. This page never
-       links to Google Calendar and never embeds it. */
+    /* Month view. Events are read in the browser from the public Google
+       Calendar named in /events/config.js. This page never embeds Google
+       Calendar and never links to an event’s Google page. */
     (function () {
       "use strict";
 
@@ -316,10 +317,70 @@
 
       function ticketHref(url) {
         if (typeof url !== "string") return "";
-        var value = url.trim();
-        if (value === "#") return "#";
-        if (/^https:\/\//i.test(value) && !isGoogleCalendarUrl(value)) return value;
+        var value = url.trim().replace(/[.,;]+$/, "");
+        if (/^https?:\/\//i.test(value) && !isGoogleCalendarUrl(value)) return value;
         return "";
+      }
+
+      function ticketFromDescription(text) {
+        var source = String(text || "");
+        var labeled = /(?:tickets?|entradas?|entrades?|tiquets?)\s*:\s*(https?:\/\/[^\s)]+)/i.exec(source);
+        var found = labeled ? labeled[1] : "";
+        if (!found) {
+          var any = /https?:\/\/[^\s)]+/i.exec(source);
+          found = any ? any[0] : "";
+        }
+        return ticketHref(found);
+      }
+
+      function isPlaceholder(value) {
+        if (typeof value !== "string") return true;
+        var text = value.trim();
+        return !text || text.indexOf("YOUR_") === 0;
+      }
+
+      function pad(number) {
+        return (number < 10 ? "0" : "") + number;
+      }
+
+      function stampFromDate(date, allDay) {
+        var iso = date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate());
+        if (allDay) return iso;
+        return iso + "T" + pad(date.getHours()) + ":" + pad(date.getMinutes()) + ":00";
+      }
+
+      function madridWall(iso) {
+        var instant = new Date(iso);
+        if (isNaN(instant.getTime())) return null;
+        var parts = new Intl.DateTimeFormat("en-GB", {
+          timeZone: "Europe/Madrid",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hourCycle: "h23"
+        }).formatToParts(instant);
+        var get = function (type) {
+          for (var i = 0; i < parts.length; i++) {
+            if (parts[i].type === type) return parts[i].value;
+          }
+          return "00";
+        };
+        var hour = get("hour") === "24" ? "00" : get("hour");
+        return get("year") + "-" + get("month") + "-" + get("day") + "T" + hour + ":" + get("minute") + ":00";
+      }
+
+      function googleWhen(part) {
+        if (!part) return null;
+        if (part.date && !part.dateTime) return { iso: part.date, allDay: true };
+        if (!part.dateTime) return null;
+        if (/Z$/i.test(part.dateTime)) {
+          var wall = madridWall(part.dateTime);
+          return wall ? { iso: wall, allDay: false } : null;
+        }
+        var match = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})/.exec(part.dateTime);
+        return { iso: match ? match[1] + ":00" : part.dateTime, allDay: false };
       }
 
       function mapHref(event) {
@@ -591,27 +652,81 @@
         };
       }
 
-      render();
-      fetch("/events/events.json", { credentials: "same-origin" })
-        .then(function (response) {
-          if (!response.ok) throw new Error("status");
-          return response.json();
-        })
-        .then(function (data) {
-          var rows = Array.isArray(data) ? data : [];
-          state.events = rows.map(normalise).filter(Boolean).sort(function (a, b) {
-            return a.startDate - b.startDate;
+      function applyEvents(rows) {
+        state.events = rows.map(normalise).filter(Boolean).sort(function (a, b) {
+          return a.startDate - b.startDate;
+        });
+        state.events.forEach(function (event, index) { event.index = index; });
+        state.ready = true;
+        state.failed = false;
+        render();
+      }
+
+      function fromGoogleItem(item) {
+        if (!item || item.status === "cancelled") return null;
+        var start = googleWhen(item.start);
+        if (!start) return null;
+        var end = googleWhen(item.end);
+        var endIso = end ? end.iso : "";
+        if (start.allDay && endIso) {
+          var endDate = parseLocal(endIso);
+          endDate.setDate(endDate.getDate() - 1);
+          if (endDate.getTime() <= parseLocal(start.iso).getTime()) endIso = "";
+          else endIso = stampFromDate(endDate, true);
+        }
+        var source = item.description || "";
+        var ticket = ticketFromDescription(source);
+        var description = cleanDescription(source);
+        if (ticket) description = cleanDescription(description.replace(ticket, ""));
+        return {
+          title: item.summary || "",
+          start: start.iso,
+          end: endIso,
+          allDay: start.allDay,
+          venue: item.location || "",
+          description: description,
+          ticketUrl: ticket
+        };
+      }
+
+      function loadFromGoogle(cfg) {
+        var start = new Date(state.year, state.month - 1, 1);
+        var end = new Date(state.year + 1, state.month + 1, 1);
+        var items = [];
+        function page(token) {
+          var url = "https://www.googleapis.com/calendar/v3/calendars/" +
+            encodeURIComponent(cfg.calendarId) +
+            "/events?singleEvents=true&orderBy=startTime&maxResults=250" +
+            "&timeMin=" + encodeURIComponent(start.toISOString()) +
+            "&timeMax=" + encodeURIComponent(end.toISOString()) +
+            "&key=" + encodeURIComponent(cfg.apiKey) +
+            (token ? "&pageToken=" + encodeURIComponent(token) : "");
+          return fetch(url).then(function (response) {
+            if (!response.ok) throw new Error("status");
+            return response.json();
+          }).then(function (data) {
+            items = items.concat(data.items || []);
+            if (data.nextPageToken && items.length < 1000) return page(data.nextPageToken);
           });
-          state.events.forEach(function (event, index) { event.index = index; });
-          state.ready = true;
-          state.failed = false;
-          render();
-        })
-        .catch(function () {
+        }
+        page().then(function () {
+          applyEvents(items.map(fromGoogleItem));
+        }).catch(function () {
           state.ready = false;
           state.failed = true;
           render();
         });
+      }
+
+      var calendarConfig = window.SPECTRUM_CALENDAR || {};
+      if (isPlaceholder(calendarConfig.calendarId) || isPlaceholder(calendarConfig.apiKey)) {
+        state.ready = true;
+        state.events = [];
+      }
+      render();
+      if (!isPlaceholder(calendarConfig.calendarId) && !isPlaceholder(calendarConfig.apiKey)) {
+        loadFromGoogle(calendarConfig);
+      }
 
       new MutationObserver(function () {
         render();
