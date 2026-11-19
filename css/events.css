@@ -1,0 +1,389 @@
+/* Month calendar. Loaded only on /events/. */
+
+.events-page {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 5.25rem 1.25rem 2.5rem;
+}
+
+.events-page h1 {
+  margin: 0 0 1.15rem;
+  font-size: 1.45rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+.icon-nav a[aria-current="page"] {
+  color: var(--text);
+}
+
+.cal-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin: 0 0 0.85rem;
+}
+
+.cal-label {
+  margin: 0;
+  min-width: 12.5rem;
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.cal-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.cal-nav:hover,
+.cal-nav:focus-visible {
+  background: var(--hover);
+}
+
+.cal-scroll {
+  overflow-x: auto;
+}
+
+.cal {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.cal th {
+  padding: 0.35rem 0.15rem 0.55rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.cal abbr {
+  text-decoration: none;
+}
+
+.cal td {
+  height: 7.15rem;
+  padding: 0.3rem;
+  border: 1px solid var(--line);
+  background: #000;
+  vertical-align: top;
+}
+
+.cal td.is-out {
+  background: transparent;
+  color: rgba(243, 238, 230, 0.32);
+}
+
+.day-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.55rem;
+  height: 1.55rem;
+  padding: 0 0.2rem;
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+.cal td.is-today .day-num {
+  background: var(--c7);
+  color: var(--bg);
+  border-radius: 999px;
+}
+
+.day-events {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  margin-top: 0.28rem;
+}
+
+.ev-btn,
+.event-row {
+  margin: 0;
+  padding: 0.28rem 0.4rem;
+  border: 0;
+  border-radius: 3px;
+  background: #1a160c;
+  box-shadow: inset 2px 0 0 var(--c7);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.72rem;
+  line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ev-btn {
+  display: block;
+  width: 100%;
+}
+
+.ev-btn:hover,
+.event-row:hover,
+.ev-btn:focus-visible,
+.event-row:focus-visible {
+  background: #2a2414;
+}
+
+.cal-empty,
+.event-fallback {
+  margin: 0.9rem 0 0;
+  color: var(--muted);
+  text-align: center;
+}
+
+.event-list-wrap {
+  display: none;
+  margin-top: 1.35rem;
+}
+
+.event-list-heading {
+  margin: 0 0 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.event-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.event-list li + li {
+  margin-top: 0.55rem;
+}
+
+.event-row {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  font-size: 0.92rem;
+}
+
+.event-row-when,
+.event-row-place {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.event-row-name {
+  display: block;
+  margin: 0.12rem 0;
+  letter-spacing: 0.04em;
+}
+
+.event-dialog[hidden] {
+  display: none;
+}
+
+.event-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(11, 7, 16, 0.78);
+}
+
+.event-card {
+  position: relative;
+  width: min(34rem, 100%);
+  max-height: min(88vh, 42rem);
+  overflow: auto;
+  padding: 1.45rem 1.35rem 1.5rem;
+  background: #120e18;
+  border: 1px solid var(--line);
+}
+
+.event-close {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.event-close:hover,
+.event-close:focus-visible {
+  background: var(--hover);
+}
+
+.event-kicker {
+  margin: 0 2rem 0.35rem 0;
+  color: var(--c7);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.event-kicker[hidden] {
+  display: none;
+}
+
+.event-card h2 {
+  margin: 0 2.2rem 0.9rem 0;
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+}
+
+.event-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 0 0.9rem;
+}
+
+.event-photo[hidden] {
+  display: none;
+}
+
+.event-when,
+.event-where,
+.event-desc {
+  margin: 0 0 0.7rem;
+  color: var(--muted);
+}
+
+.event-card a {
+  color: var(--text);
+}
+
+.event-map {
+  text-underline-offset: 0.22em;
+}
+
+.event-tickets {
+  display: inline-block;
+  margin-top: 0.45rem;
+  padding: 0.55rem 0.95rem;
+  border: 1px solid var(--c7);
+  color: var(--text);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.event-tickets:hover,
+.event-tickets:focus-visible {
+  background: rgba(245, 197, 54, 0.12);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+html.event-open,
+html.event-open body {
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .events-page {
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
+  }
+
+  .cal-label {
+    min-width: 0;
+    flex: 1 1 auto;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+  }
+
+  .cal th {
+    font-size: 0.58rem;
+    letter-spacing: 0.02em;
+  }
+
+  .cal td {
+    height: auto;
+    padding: 0.28rem 0.05rem 0.35rem;
+    text-align: center;
+  }
+
+  .day-events {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.22rem;
+    min-height: 0.45rem;
+    margin-top: 0.18rem;
+  }
+
+  .ev-btn {
+    width: 0.7rem;
+    height: 0.7rem;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--c7);
+    box-shadow: none;
+    color: transparent;
+    font-size: 0;
+  }
+
+  .event-list-wrap {
+    display: block;
+  }
+}
+
+.event-list-wrap[hidden] {
+  display: none;
+}
+
+@media (max-width: 380px) {
+  .cal th {
+    letter-spacing: 0;
+  }
+}

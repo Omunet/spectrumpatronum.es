@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eventos — Spectrum Patronum</title>
+  <meta name="description" content="Calendario de eventos de Associació Spectrum Patronum.">
+  <meta name="theme-color" content="#0B0710">
+  <meta name="color-scheme" content="dark">
+  <link rel="icon" href="/assets/sp-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/events.css">
+  <style>html,body{background:#0B0710;color:#F3EEE6}</style>
+  <script>
+    try {
+      var savedLang = localStorage.getItem("sp-lang");
+      if (savedLang === "es" || savedLang === "ca" || savedLang === "en") {
+        document.documentElement.lang = savedLang;
+      }
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="skip" href="#contenido" data-i18n="skip">Saltar al contenido</a>
+    <nav class="social" aria-label="Social">
+      <ul>
+        <li>
+          <a href="https://www.instagram.com/spectrumpatronum.es" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+              <rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"></rect>
+              <circle cx="12" cy="12" r="4.15" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
+              <circle cx="17.35" cy="6.65" r="1.05" fill="currentColor"></circle>
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <nav class="icon-nav" aria-label="Menú" data-i18n-aria="icon.nav">
+      <ul>
+        <li>
+          <a href="/" data-i18n-aria="icon.home" data-i18n-title="icon.home" aria-label="Inicio" title="Inicio">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+              <path d="M4 11.2 12 4.2l8 7V20a1 1 0 0 1-1 1h-5.2v-6.2H10.2V21H5a1 1 0 0 1-1-1v-8.8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+            </svg>
+          </a>
+        </li>
+        <li>
+          <a href="/projects/" data-i18n-aria="icon.projects" data-i18n-title="icon.projects" aria-label="Proyectos" title="Proyectos">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+              <path d="M14.2 4.4 19.6 9.8 16.8 12.6 11.4 7.2 14.2 4.4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+              <path d="M11.1 7.5 5.4 13.2a2 2 0 0 0 0 2.8l.3.3M7.6 15.4 4.2 18.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+            </svg>
+          </a>
+        </li>
+        <li>
+          <a href="/events/" aria-current="page" data-i18n-aria="icon.events" data-i18n-title="icon.events" aria-label="Eventos" title="Eventos">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+              <rect x="4" y="5.5" width="16" height="14.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"></rect>
+              <path d="M4 10h16M8 3.5v4M16 3.5v4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+            </svg>
+          </a>
+        </li>
+        <li>
+          <a class="js-instagram" href="https://www.instagram.com/spectrumpatronum.es" target="_blank" rel="noopener" data-i18n-aria="icon.contact" data-i18n-title="icon.contact" aria-label="Contacto" title="Contacto">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+              <path d="M8 4.2h2.1l1.1 2.9-1.5 1a11.2 11.2 0 0 0 5.2 5.2l1-1.5 2.9 1.1v2.1c0 .7-.5 1.3-1.2 1.4A14.4 14.4 0 0 1 6.6 5.4c.1-.7.7-1.2 1.4-1.2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="lang">
+      <button type="button" class="lang-btn" id="lang-btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-menu" aria-label="Elegir idioma" data-i18n-aria="lang.label">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="8.25" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
+          <path d="M3.75 12h16.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+          <path d="M12 3.75c2.35 2.55 3.55 5.35 3.55 8.25s-1.2 5.7-3.55 8.25c-2.35-2.55-3.55-5.35-3.55-8.25s1.2-5.7 3.55-8.25z" fill="none" stroke="currentColor" stroke-width="1.6"></path>
+        </svg>
+      </button>
+      <ul class="lang-menu" id="lang-menu" role="listbox" aria-labelledby="lang-btn" hidden>
+        <li role="none"><button type="button" role="option" lang="es" data-lang="es" aria-selected="true">Español</button></li>
+        <li role="none"><button type="button" role="option" lang="ca" data-lang="ca" aria-selected="false">Català</button></li>
+        <li role="none"><button type="button" role="option" lang="en" data-lang="en" aria-selected="false">English</button></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="events-page" id="contenido">
+    <p class="legal-home"><a href="/">Spectrum Patronum</a></p>
+    <h1 id="events-heading">Eventos</h1>
+    <div class="cal-toolbar">
+      <button type="button" class="cal-nav" id="cal-prev" aria-label="Mes anterior">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+          <path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </button>
+      <h2 class="cal-label" id="cal-label">Noviembre 2026</h2>
+      <button type="button" class="cal-nav" id="cal-next" aria-label="Mes siguiente">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+          <path d="M9.5 5.5 16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </button>
+    </div>
+    <noscript><p class="event-fallback">Activa JavaScript para ver el calendario.</p></noscript>
+    <div class="cal-scroll" id="cal-mount"></div>
+    <p class="cal-empty" id="cal-empty" hidden></p>
+    <section class="event-list-wrap" id="event-list-wrap" aria-labelledby="event-list-heading">
+      <h2 class="event-list-heading" id="event-list-heading">Este mes</h2>
+      <ul class="event-list" id="event-list"></ul>
+    </section>
+    <p class="visually-hidden" id="cal-live" aria-live="polite"></p>
+  </main>
+
+  <footer class="site-footer">
+    <p class="footer-name">Associació Spectrum Patronum</p>
+    <p data-i18n="footer.note">Asociación cultural sin ánimo de lucro · Barcelona</p>
+    <p class="legal-links">
+      <a href="/privacidad.html" data-i18n="legal.privacy">Privacidad</a>
+    </p>
+  </footer>
+
+  <div class="event-dialog" id="event-dialog" role="dialog" aria-modal="true" aria-labelledby="event-dialog-title" tabindex="-1" hidden>
+    <div class="event-card">
+      <button type="button" class="event-close" id="event-close" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+        </svg>
+      </button>
+      <p class="event-kicker" id="event-kicker" hidden>Ejemplo</p>
+      <h2 id="event-dialog-title" tabindex="-1"></h2>
+      <img class="event-photo" id="event-photo" alt="" hidden>
+      <p class="event-when" id="event-when"></p>
+      <p class="event-where" id="event-where"></p>
+      <p><a class="event-map" id="event-map" href="#" target="_blank" rel="noopener noreferrer">Ver en el mapa</a></p>
+      <p class="event-desc" id="event-desc"></p>
+      <p><a class="event-tickets" id="event-tickets" href="#" target="_blank" rel="noopener noreferrer">Entradas<span class="visually-hidden"> (Se abre en una pestaña nueva)</span></a></p>
+    </div>
+  </div>
+
+  <script src="/events/config.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    /* Month view. Events are read in the browser from the public Google
+       Calendar named in /events/config.js. This page never embeds Google
+       Calendar and never links to an event’s Google page. */
+    (function () {
+      "use strict";
+
+      var COPY = {
+        es: {
+          title: "Eventos — Spectrum Patronum",
+          description: "Calendario de eventos de Associació Spectrum Patronum.",
+          heading: "Eventos",
+          prev: "Mes anterior",
+          next: "Mes siguiente",
+          today: "Hoy",
+          tickets: "Entradas",
+          map: "Ver en el mapa",
+          close: "Cerrar",
+          empty: "No hay eventos este mes.",
+          example: "Ejemplo",
+          list: "Este mes",
+          loading: "Cargando el calendario…",
+          error: "No se ha podido cargar el calendario.",
+          opens: "Se abre en una pestaña nueva",
+          events: "eventos"
+        },
+        ca: {
+          title: "Esdeveniments — Spectrum Patronum",
+          description: "Calendari d'esdeveniments de l'Associació Spectrum Patronum.",
+          heading: "Esdeveniments",
+          prev: "Mes anterior",
+          next: "Mes següent",
+          today: "Avui",
+          tickets: "Entrades",
+          map: "Veure al mapa",
+          close: "Tanca",
+          empty: "No hi ha esdeveniments aquest mes.",
+          example: "Exemple",
+          list: "Aquest mes",
+          loading: "S'està carregant el calendari…",
+          error: "No s'ha pogut carregar el calendari.",
+          opens: "S'obre en una pestanya nova",
+          events: "esdeveniments"
+        },
+        en: {
+          title: "Events — Spectrum Patronum",
+          description: "Event calendar of Associació Spectrum Patronum.",
+          heading: "Events",
+          prev: "Previous month",
+          next: "Next month",
+          today: "Today",
+          tickets: "Tickets",
+          map: "View on the map",
+          close: "Close",
+          empty: "No events this month.",
+          example: "Example",
+          list: "This month",
+          loading: "Loading the calendar…",
+          error: "The calendar could not be loaded.",
+          opens: "Opens in a new tab",
+          events: "events"
+        }
+      };
+
+      var now = new Date();
+      var state = {
+        year: now.getFullYear(),
+        month: now.getMonth(),
+        events: [],
+        openIndex: -1,
+        opener: null,
+        ready: false,
+        failed: false
+      };
+
+      var mount = document.getElementById("cal-mount");
+      var label = document.getElementById("cal-label");
+      var heading = document.getElementById("events-heading");
+      var empty = document.getElementById("cal-empty");
+      var listHeading = document.getElementById("event-list-heading");
+      var list = document.getElementById("event-list");
+      var live = document.getElementById("cal-live");
+      var prev = document.getElementById("cal-prev");
+      var next = document.getElementById("cal-next");
+      var dialog = document.getElementById("event-dialog");
+      var closeBtn = document.getElementById("event-close");
+      var titleEl = document.getElementById("event-dialog-title");
+      var kicker = document.getElementById("event-kicker");
+      var whenEl = document.getElementById("event-when");
+      var whereEl = document.getElementById("event-where");
+      var mapEl = document.getElementById("event-map");
+      var descEl = document.getElementById("event-desc");
+      var ticketsEl = document.getElementById("event-tickets");
+      var photoEl = document.getElementById("event-photo");
+      var descMeta = document.querySelector('meta[name="description"]');
+      var narrowQuery = window.matchMedia("(max-width: 640px)");
+
+      function langNow() {
+        var lang = document.documentElement.lang;
+        return COPY[lang] ? lang : "es";
+      }
+
+      function copy() {
+        return COPY[langNow()];
+      }
+
+      function esc(value) {
+        return String(value == null ? "" : value).replace(/[&<>"']/g, function (ch) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch];
+        });
+      }
+
+      function parseLocal(value) {
+        if (typeof value !== "string") return null;
+        var match = /^(\d{4})-(\d{2})-(\d{2})(?:[T\s](\d{2}):(\d{2}))?/.exec(value.trim());
+        if (!match) return null;
+        return new Date(+match[1], +match[2] - 1, +match[3], match[4] ? +match[4] : 0, match[5] ? +match[5] : 0, 0, 0);
+      }
+
+      function sameDay(a, b) {
+        return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+      }
+
+      function monthName(year, month, lang) {
+        var text = new Date(year, month, 1).toLocaleDateString(lang, { month: "long", year: "numeric" });
+        return text.charAt(0).toLocaleUpperCase(lang) + text.slice(1);
+      }
+
+      function timeText(date, lang) {
+        return date.toLocaleTimeString(lang, { hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+      }
+
+      function whenText(event, lang) {
+        var start = event.startDate;
+        var end = event.endDate;
+        var dateOpts = { weekday: "long", day: "numeric", month: "long", year: "numeric" };
+        var startDate = start.toLocaleDateString(lang, dateOpts);
+        if (event.allDay) {
+          if (!end || sameDay(start, end)) return startDate;
+          return startDate + " – " + end.toLocaleDateString(lang, dateOpts);
+        }
+        var startTime = timeText(start, lang);
+        if (!end) return startDate + ", " + startTime;
+        if (sameDay(start, end)) return startDate + ", " + startTime + " – " + timeText(end, lang);
+        return startDate + ", " + startTime + " – " + end.toLocaleDateString(lang, dateOpts) + ", " + timeText(end, lang);
+      }
+
+      function placeText(event) {
+        return [event.venue, event.address, event.city].filter(function (part) {
+          return part && String(part).trim();
+        }).join(", ");
+      }
+
+      function isGoogleCalendarUrl(value) {
+        var match = /^https?:\/\/([^\/?#]+)([^?#]*)/i.exec(String(value || "").trim());
+        if (!match) return false;
+        var host = match[1].toLowerCase().replace(/^www\./, "");
+        var path = match[2] || "";
+        if (host === "calendar.google.com") return true;
+        if (/(^|\.)google\.com$/i.test(host) && /\/calendar/i.test(path)) return true;
+        return false;
+      }
+
+      function cleanDescription(text) {
+        if (!text) return "";
+        return String(text)
+          .replace(/https?:\/\/[^\s)]+/gi, function (url) {
+            return isGoogleCalendarUrl(url) ? "" : url;
+          })
+          .replace(/[ \t]{2,}/g, " ")
+          .replace(/[ \t]+\n/g, "\n")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+      }
+
+      function ticketHref(url) {
+        if (typeof url !== "string") return "";
+        var value = url.trim().replace(/[.,;]+$/, "");
+        if (/^https?:\/\//i.test(value) && !isGoogleCalendarUrl(value)) return value;
+        return "";
+      }
+
+      function ticketFromDescription(text) {
+        var source = String(text || "");
+        var labeled = /(?:tickets?|entradas?|entrades?|tiquets?)\s*:\s*(https?:\/\/[^\s)]+)/i.exec(source);
+        var found = labeled ? labeled[1] : "";
+        if (!found) {
+          var any = /https?:\/\/[^\s)]+/i.exec(source);
+          found = any ? any[0] : "";
+        }
+        return ticketHref(found);
+      }
+
+      function isPlaceholder(value) {
+        if (typeof value !== "string") return true;
+        var text = value.trim();
+        return !text || text.indexOf("YOUR_") === 0;
+      }
+
+      function pad(number) {
+        return (number < 10 ? "0" : "") + number;
+      }
+
+      function stampFromDate(date, allDay) {
+        var iso = date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate());
+        if (allDay) return iso;
+        return iso + "T" + pad(date.getHours()) + ":" + pad(date.getMinutes()) + ":00";
+      }
+
+      function madridWall(iso) {
+        var instant = new Date(iso);
+        if (isNaN(instant.getTime())) return null;
+        var parts = new Intl.DateTimeFormat("en-GB", {
+          timeZone: "Europe/Madrid",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hourCycle: "h23"
+        }).formatToParts(instant);
+        var get = function (type) {
+          for (var i = 0; i < parts.length; i++) {
+            if (parts[i].type === type) return parts[i].value;
+          }
+          return "00";
+        };
+        var hour = get("hour") === "24" ? "00" : get("hour");
+        return get("year") + "-" + get("month") + "-" + get("day") + "T" + hour + ":" + get("minute") + ":00";
+      }
+
+      function googleWhen(part) {
+        if (!part) return null;
+        if (part.date && !part.dateTime) return { iso: part.date, allDay: true };
+        if (!part.dateTime) return null;
+        if (/Z$/i.test(part.dateTime)) {
+          var wall = madridWall(part.dateTime);
+          return wall ? { iso: wall, allDay: false } : null;
+        }
+        var match = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})/.exec(part.dateTime);
+        return { iso: match ? match[1] + ":00" : part.dateTime, allDay: false };
+      }
+
+      function mapHref(event) {
+        var query = placeText(event);
+        if (!query) return "";
+        return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(query);
+      }
+
+      function imageSrc(event) {
+        if (typeof event.image !== "string") return "";
+        var value = event.image.trim();
+        if (/^https:\/\//i.test(value) || value.charAt(0) === "/") return value;
+        return "";
+      }
+
+      function monthEvents() {
+        return state.events.filter(function (event) {
+          return event.startDate.getFullYear() === state.year && event.startDate.getMonth() === state.month;
+        });
+      }
+
+      function eventsOn(date) {
+        return state.events.filter(function (event) {
+          return sameDay(event.startDate, date);
+        });
+      }
+
+      function buttonName(event, lang) {
+        if (event.allDay) {
+          return event.title + ", " + event.startDate.toLocaleDateString(lang, { day: "numeric", month: "long" });
+        }
+        return event.title + ", " + timeText(event.startDate, lang);
+      }
+
+      function setChrome() {
+        var text = copy();
+        document.title = text.title;
+        if (descMeta) descMeta.setAttribute("content", text.description);
+        if (heading) heading.textContent = text.heading;
+        prev.setAttribute("aria-label", text.prev);
+        next.setAttribute("aria-label", text.next);
+        closeBtn.setAttribute("aria-label", text.close);
+        listHeading.textContent = text.list;
+        label.textContent = monthName(state.year, state.month, langNow());
+      }
+
+      function render() {
+        var text = copy();
+        var lang = langNow();
+        setChrome();
+        if (!state.ready) {
+          mount.innerHTML = "";
+          list.innerHTML = "";
+          empty.hidden = false;
+          empty.textContent = state.failed ? text.error : text.loading;
+          return;
+        }
+
+        var first = new Date(state.year, state.month, 1);
+        var startOffset = (first.getDay() + 6) % 7;
+        var daysInMonth = new Date(state.year, state.month + 1, 0).getDate();
+        var total = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+        var cursor = new Date(state.year, state.month, 1 - startOffset);
+        var heads = "";
+        var i;
+        for (i = 0; i < 7; i++) {
+          var weekday = new Date(2026, 10, 2 + i);
+          heads += "<th scope=\"col\"><abbr title=\"" + esc(weekday.toLocaleDateString(lang, { weekday: "long" })) + "\">" +
+            esc(weekday.toLocaleDateString(lang, { weekday: "short" })) + "</abbr></th>";
+        }
+        var body = "";
+        for (i = 0; i < total; i++) {
+          if (i % 7 === 0) body += "<tr>";
+          var date = new Date(cursor.getFullYear(), cursor.getMonth(), cursor.getDate() + i);
+          var out = date.getMonth() !== state.month;
+          var today = sameDay(date, now);
+          var dayEvents = out ? [] : eventsOn(date);
+          var cls = (out ? "is-out" : "") + (today ? " is-today" : "");
+          var num = String(date.getDate());
+          if (today) num += "<span class=\"visually-hidden\">, " + esc(text.today) + "</span>";
+          var buttons = "";
+          dayEvents.forEach(function (event) {
+            buttons += "<button type=\"button\" class=\"ev-btn\" data-event=\"" + event.index + "\" aria-label=\"" +
+              esc(buttonName(event, lang)) + "\">" + esc(event.title) + "</button>";
+          });
+          body += "<td class=\"" + cls.trim() + "\"><div class=\"day\"><span class=\"day-num\">" + num +
+            "</span><div class=\"day-events\">" + buttons + "</div></div></td>";
+          if (i % 7 === 6) body += "</tr>";
+        }
+        mount.innerHTML = "<table class=\"cal\" aria-labelledby=\"cal-label\"><thead><tr>" + heads +
+          "</tr></thead><tbody>" + body + "</tbody></table>";
+
+        var inMonth = monthEvents();
+        empty.hidden = inMonth.length > 0;
+        empty.textContent = text.empty;
+        document.getElementById("event-list-wrap").hidden = inMonth.length === 0;
+        list.innerHTML = inMonth.map(function (event) {
+          var shortWhen = event.startDate.toLocaleDateString(lang, { weekday: "short", day: "numeric", month: "short" });
+          if (!event.allDay) shortWhen += " · " + timeText(event.startDate, lang);
+          return "<li><button type=\"button\" class=\"event-row\" data-event=\"" + event.index + "\">" +
+            "<span class=\"event-row-when\">" + esc(shortWhen) + "</span>" +
+            "<span class=\"event-row-name\">" + esc(event.title) + "</span>" +
+            "<span class=\"event-row-place\">" + esc(placeText(event)) + "</span></button></li>";
+        }).join("");
+
+        applyNarrow();
+        var count = inMonth.length;
+        live.textContent = label.textContent + ". " + count + " " + text.events + ".";
+        if (state.openIndex >= 0 && state.events[state.openIndex]) fillDialog(state.events[state.openIndex]);
+      }
+
+      function applyNarrow() {
+        var narrow = narrowQuery.matches;
+        Array.prototype.forEach.call(mount.querySelectorAll(".ev-btn"), function (btn) {
+          if (narrow) btn.setAttribute("tabindex", "-1");
+          else btn.removeAttribute("tabindex");
+        });
+      }
+
+      function fillDialog(event) {
+        var text = copy();
+        var lang = langNow();
+        titleEl.textContent = event.title;
+        kicker.hidden = !event.example;
+        kicker.textContent = text.example;
+        whenEl.textContent = whenText(event, lang);
+        var place = placeText(event);
+        whereEl.hidden = !place;
+        whereEl.textContent = place;
+        var map = mapHref(event);
+        mapEl.hidden = !map;
+        mapEl.parentNode.hidden = !map;
+        if (map) {
+          mapEl.href = map;
+          mapEl.textContent = text.map;
+          mapEl.appendChild(hiddenOpens(text));
+        }
+        var description = cleanDescription(event.description);
+        descEl.hidden = !description;
+        descEl.textContent = description;
+        var href = ticketHref(event.ticketUrl);
+        ticketsEl.hidden = !href;
+        ticketsEl.parentNode.hidden = !href;
+        if (href) {
+          ticketsEl.href = href;
+          ticketsEl.textContent = text.tickets;
+          ticketsEl.appendChild(hiddenOpens(text));
+        }
+        var src = imageSrc(event);
+        photoEl.hidden = !src;
+        if (src) {
+          photoEl.src = src;
+          photoEl.alt = event.imageAlt || event.title;
+        } else {
+          photoEl.removeAttribute("src");
+          photoEl.alt = "";
+        }
+      }
+
+      function hiddenOpens(text) {
+        var span = document.createElement("span");
+        span.className = "visually-hidden";
+        span.textContent = " (" + text.opens + ")";
+        return span;
+      }
+
+      function setPageHidden(hidden) {
+        ["site-header", "contenido", "site-footer"].forEach(function (id) {
+          var el = id === "site-header" ? document.querySelector("header") : id === "site-footer" ? document.querySelector("footer") : document.getElementById(id);
+          if (el) el.setAttribute("aria-hidden", hidden ? "true" : "false");
+        });
+        document.documentElement.classList.toggle("event-open", hidden);
+      }
+
+      function openDialog(index, opener) {
+        var event = state.events[index];
+        if (!event) return;
+        state.openIndex = index;
+        state.opener = opener || null;
+        fillDialog(event);
+        dialog.hidden = false;
+        dialog.focus();
+        setPageHidden(true);
+      }
+
+      function closeDialog() {
+        if (dialog.hidden) return;
+        dialog.hidden = true;
+        state.openIndex = -1;
+        setPageHidden(false);
+        if (state.opener && state.opener.focus) state.opener.focus();
+        state.opener = null;
+      }
+
+      function onActivate(event) {
+        var btn = event.target.closest("[data-event]");
+        if (!btn) return;
+        openDialog(+btn.getAttribute("data-event"), btn);
+      }
+
+      mount.addEventListener("click", onActivate);
+      list.addEventListener("click", onActivate);
+      prev.addEventListener("click", function () { shift(-1); });
+      next.addEventListener("click", function () { shift(1); });
+      closeBtn.addEventListener("click", closeDialog);
+      dialog.addEventListener("click", function (event) {
+        if (event.target === dialog) closeDialog();
+      });
+      dialog.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeDialog();
+          return;
+        }
+        if (event.key !== "Tab") return;
+        var nodes = dialog.querySelectorAll("button:not([disabled]), a[href]");
+        var items = Array.prototype.filter.call(nodes, function (el) {
+          return !el.hidden && el.parentNode && !el.parentNode.hidden;
+        });
+        if (!items.length) return;
+        var first = items[0];
+        var last = items[items.length - 1];
+        var active = document.activeElement;
+        if (event.shiftKey && (active === first || active === dialog)) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && (active === last || active === dialog)) {
+          event.preventDefault();
+          first.focus();
+        }
+      });
+      mount.addEventListener("keydown", function (event) {
+        var dir = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+        if (!dir[event.key]) return;
+        var buttons = Array.prototype.slice.call(mount.querySelectorAll(".ev-btn"));
+        var index = buttons.indexOf(document.activeElement);
+        if (index < 0) return;
+        event.preventDefault();
+        buttons[(index + dir[event.key] + buttons.length) % buttons.length].focus();
+      });
+
+      if (narrowQuery.addEventListener) narrowQuery.addEventListener("change", applyNarrow);
+      else if (narrowQuery.addListener) narrowQuery.addListener(applyNarrow);
+
+      function shift(delta) {
+        var nextDate = new Date(state.year, state.month + delta, 1);
+        state.year = nextDate.getFullYear();
+        state.month = nextDate.getMonth();
+        render();
+      }
+
+      function normalise(raw, index) {
+        var start = parseLocal(raw && raw.start);
+        if (!start) return null;
+        return {
+          index: index,
+          title: raw.title ? String(raw.title) : "",
+          startDate: start,
+          endDate: parseLocal(raw.end),
+          venue: raw.venue ? String(raw.venue) : "",
+          address: raw.address ? String(raw.address) : "",
+          city: raw.city ? String(raw.city) : "",
+          ticketUrl: raw.ticketUrl ? String(raw.ticketUrl) : "",
+          description: cleanDescription(raw.description),
+          image: raw.image ? String(raw.image) : "",
+          imageAlt: raw.imageAlt ? String(raw.imageAlt) : "",
+          example: raw.example === true,
+          allDay: raw.allDay === true
+        };
+      }
+
+      function applyEvents(rows) {
+        state.events = rows.map(normalise).filter(Boolean).sort(function (a, b) {
+          return a.startDate - b.startDate;
+        });
+        state.events.forEach(function (event, index) { event.index = index; });
+        state.ready = true;
+        state.failed = false;
+        render();
+      }
+
+      function fromGoogleItem(item) {
+        if (!item || item.status === "cancelled") return null;
+        var start = googleWhen(item.start);
+        if (!start) return null;
+        var end = googleWhen(item.end);
+        var endIso = end ? end.iso : "";
+        if (start.allDay && endIso) {
+          var endDate = parseLocal(endIso);
+          endDate.setDate(endDate.getDate() - 1);
+          if (endDate.getTime() <= parseLocal(start.iso).getTime()) endIso = "";
+          else endIso = stampFromDate(endDate, true);
+        }
+        var source = item.description || "";
+        var ticket = ticketFromDescription(source);
+        var description = cleanDescription(source);
+        if (ticket) description = cleanDescription(description.replace(ticket, ""));
+        return {
+          title: item.summary || "",
+          start: start.iso,
+          end: endIso,
+          allDay: start.allDay,
+          venue: item.location || "",
+          description: description,
+          ticketUrl: ticket
+        };
+      }
+
+      function loadFromGoogle(cfg) {
+        var start = new Date(state.year, state.month - 1, 1);
+        var end = new Date(state.year + 1, state.month + 1, 1);
+        var items = [];
+        function page(token) {
+          var url = "https://www.googleapis.com/calendar/v3/calendars/" +
+            encodeURIComponent(cfg.calendarId) +
+            "/events?singleEvents=true&orderBy=startTime&maxResults=250" +
+            "&timeMin=" + encodeURIComponent(start.toISOString()) +
+            "&timeMax=" + encodeURIComponent(end.toISOString()) +
+            "&key=" + encodeURIComponent(cfg.apiKey) +
+            (token ? "&pageToken=" + encodeURIComponent(token) : "");
+          return fetch(url).then(function (response) {
+            if (!response.ok) throw new Error("status");
+            return response.json();
+          }).then(function (data) {
+            items = items.concat(data.items || []);
+            if (data.nextPageToken && items.length < 1000) return page(data.nextPageToken);
+          });
+        }
+        page().then(function () {
+          applyEvents(items.map(fromGoogleItem));
+        }).catch(function () {
+          state.ready = false;
+          state.failed = true;
+          render();
+        });
+      }
+
+      var calendarConfig = window.SPECTRUM_CALENDAR || {};
+      if (isPlaceholder(calendarConfig.calendarId) || isPlaceholder(calendarConfig.apiKey)) {
+        state.ready = true;
+        state.events = [];
+      }
+      render();
+      if (!isPlaceholder(calendarConfig.calendarId) && !isPlaceholder(calendarConfig.apiKey)) {
+        loadFromGoogle(calendarConfig);
+      }
+
+      new MutationObserver(function () {
+        render();
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+    })();
+  </script>
+</body>
+</html>
