@@ -18,7 +18,7 @@ Google Apps Script web app for the website contact form. The inbox that receives
      (older editors call this "Anyone, even anonymous")
 6. Authorize send-mail and Drive access when Google asks. The script runs as the account you deploy with, and that account must be able to write to the Drive folder.
 7. Copy the web app URL that ends in `/exec`.
-8. Put that URL in `FORM_ENDPOINT` in `js/main.js` and `test/js/main.js`, in place of the `REPLACE_WITH_DEPLOYMENT_ID` placeholder.
+8. `FORM_ENDPOINT` in `js/main.js` and `test/js/main.js` is already set to the current deployment. Replace it only if you create a new deployment with a different URL.
 
 After later edits to `Code.gs`, open **Deploy**, **Manage deployments**, edit the web app, and select **New version**. Updating the existing deployment keeps the same `/exec` URL.
 
@@ -42,7 +42,7 @@ No Google account is needed to try the form.
 node form-backend/mock-server.js
 ```
 
-Open `http://127.0.0.1:8787/`. The server rewrites the placeholder `FORM_ENDPOINT` only in the JavaScript it serves, so the page posts to this mock. The file in the repository stays a placeholder.
+Open `http://127.0.0.1:8787/`. The server rewrites `FORM_ENDPOINT` only in the JavaScript it serves, so the page posts to this mock instead of the deployed web app. The file in the repository is unchanged.
 
 The mock follows the Apps Script redirect: `POST /exec` responds with `302` to `/done`, and `/done` returns JSON. The terminal prints the sender's name, the page language, and the file names. It does not have an inbox address and does not print one.
 

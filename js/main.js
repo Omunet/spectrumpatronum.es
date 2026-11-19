@@ -3,7 +3,7 @@
 
   // Web app URL (Deploy > Web app, ends with /exec).
   // The inbox address is not stored in this file.
-  var FORM_ENDPOINT = "https://script.google.com/macros/s/REPLACE_WITH_DEPLOYMENT_ID/exec";
+  var FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbxtcZmeIK5q4sYoTOtVQhMb4HOilwVwxlZ_MkIOS4Pk_pirVBqMglRkcFSTV-sb2mTq/exec";
   // Optional. Sent only when the script property SHARED_SECRET is set to the same value.
   var FORM_TOKEN = "";
   var MAX_BYTES = 20 * 1024 * 1024;

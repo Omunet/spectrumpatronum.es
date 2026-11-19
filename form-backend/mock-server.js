@@ -7,7 +7,7 @@ var path = require("path");
 
 var PORT = Number(process.env.PORT) || 8787;
 var ROOT = path.resolve(__dirname, "..");
-var PLACEHOLDER = "https://script.google.com/macros/s/REPLACE_WITH_DEPLOYMENT_ID/exec";
+var PLACEHOLDER = "https://script.google.com/macros/s/AKfycbxtcZmeIK5q4sYoTOtVQhMb4HOilwVwxlZ_MkIOS4Pk_pirVBqMglRkcFSTV-sb2mTq/exec";
 var last = null;
 
 var TYPES = {
