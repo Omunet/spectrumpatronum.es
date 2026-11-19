@@ -1,0 +1,164 @@
+/* Square project tiles. Loaded only on /projects/. */
+
+.projects-page {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 5.25rem 1.25rem 1.5rem;
+}
+
+.projects-page h1 {
+  margin: 0 0 1.35rem;
+  font-size: 1.45rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+.icon-nav a[aria-current="page"] {
+  color: var(--text);
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-grid > li {
+  min-width: 0;
+}
+
+.project-tile {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  padding: 0.7rem 0.75rem 0.8rem;
+  background: #000;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid rgba(243, 238, 230, 0.28);
+  border-radius: 2px;
+}
+
+a.project-tile:hover {
+  border-color: rgba(243, 238, 230, 0.62);
+  background: #070707;
+}
+
+.project-tile.is-placeholder {
+  border-style: dashed;
+  border-color: rgba(243, 238, 230, 0.28);
+  cursor: default;
+}
+
+.project-logo {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.project-logo img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  object-fit: contain;
+}
+
+.project-logo img.project-mark {
+  width: 42%;
+  height: 42%;
+}
+
+.project-copy {
+  flex: 0 0 auto;
+  display: block;
+  padding-top: 0.45rem;
+  text-align: center;
+}
+
+.project-name {
+  display: block;
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(0.78rem, 1.5vw, 0.98rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.project-tile.is-placeholder .project-name {
+  color: var(--muted);
+}
+
+.project-bio {
+  display: block;
+  margin: 0.28rem 0 0;
+  color: var(--muted);
+  font-size: clamp(0.72rem, 1.15vw, 0.82rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.project-fallback {
+  margin: 0;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* Phones: one square column. Wider phones and tablets: two.
+   Desktop: three, then four. */
+@media (min-width: 540px) {
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 960px) {
+  .project-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1240px) {
+  .project-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .projects-page {
+    padding-left: 0.9rem;
+    padding-right: 0.9rem;
+  }
+
+  .project-tile {
+    padding: 0.55rem 0.6rem 0.7rem;
+  }
+
+  .project-bio {
+    font-size: 0.78rem;
+  }
+}
