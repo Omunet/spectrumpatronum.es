@@ -91,6 +91,7 @@
     <h1 id="projects-heading">Proyectos</h1>
     <noscript><p class="project-fallback">Activa JavaScript para ver los proyectos.</p></noscript>
     <ul class="project-grid" id="project-grid" aria-labelledby="projects-heading"></ul>
+    <ul class="project-notes" id="project-notes" aria-label="Biografías"></ul>
   </main>
 
   <footer class="site-footer">
@@ -138,7 +139,8 @@
           placeholderName: "Nombre del proyecto",
           placeholderBio: "Biografía breve próximamente",
           placeholderAlt: "Logotipo provisional",
-          newTab: "Se abre en una pestaña nueva"
+          newTab: "Se abre en una pestaña nueva",
+          notesLabel: "Biografías"
         },
         ca: {
           title: "Projectes — Spectrum Patronum",
@@ -147,7 +149,8 @@
           placeholderName: "Nom del projecte",
           placeholderBio: "Biografia breu ben aviat",
           placeholderAlt: "Logotip provisional",
-          newTab: "S'obre en una pestanya nova"
+          newTab: "S'obre en una pestanya nova",
+          notesLabel: "Biografies"
         },
         en: {
           title: "Projects — Spectrum Patronum",
@@ -156,11 +159,13 @@
           placeholderName: "Project name",
           placeholderBio: "Short bio coming soon",
           placeholderAlt: "Placeholder logo",
-          newTab: "Opens in a new tab"
+          newTab: "Opens in a new tab",
+          notesLabel: "Short bios"
         }
       };
 
       var grid = document.getElementById("project-grid");
+      var notes = document.getElementById("project-notes");
       var heading = document.getElementById("projects-heading");
       var desc = document.querySelector('meta[name="description"]');
 
@@ -181,6 +186,7 @@
         if (desc) desc.setAttribute("content", copy.description);
         if (heading) heading.textContent = copy.heading;
         var html = "";
+        var noteHtml = "";
         PROJECTS.forEach(function (project) {
           var placeholder = !!project.placeholder;
           var name = placeholder ? (project.name || copy.placeholderName) : project.name;
@@ -201,8 +207,18 @@
           } else {
             html += '<li><div class="project-tile is-placeholder">' + body + "</div></li>";
           }
+          var noteName = (!placeholder && href.indexOf("https://") === 0)
+            ? '<a class="project-note-name" href="' + esc(href) + '" target="_blank" rel="noopener noreferrer">' + esc(name) +
+              '<span class="visually-hidden"> (' + esc(copy.newTab) + ")</span></a>"
+            : '<span class="project-note-name">' + esc(name) + "</span>";
+          noteHtml += '<li class="project-note' + (placeholder ? " is-placeholder" : "") + '">' + noteName +
+            '<span class="project-note-bio"' + (placeholder ? "" : ' lang="en"') + ">" + esc(bio) + "</span></li>";
         });
         grid.innerHTML = html;
+        if (notes) {
+          notes.innerHTML = noteHtml;
+          notes.setAttribute("aria-label", copy.notesLabel);
+        }
       }
 
       render();
