@@ -113,7 +113,7 @@ var server = http.createServer(function (req, res) {
       sendJson(res, 200, { ok: false, error: "wait" });
       return;
     }
-    if (!last.name || !last.surname || !last.message || !last.email) {
+    if (!last.name || !last.message || !last.email) {
       sendJson(res, 200, { ok: false, error: "invalid" });
       return;
     }

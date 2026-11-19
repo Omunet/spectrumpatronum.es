@@ -2,39 +2,54 @@
  * Contact form endpoint for spectrumpatronum.es.
  *
  * Deploy as a web app: Execute as me, Who has access: Anyone.
- * The inbox address is read from the script property RECIPIENT.
- * Do not write that address in this file.
+ * After editing this file, open Deploy > Manage deployments, edit the
+ * web app, and choose New version. The /exec URL stays the same.
+ *
+ * The site stores nothing. The script sends one email to the address in
+ * the RECIPIENT script property and does not write that address here.
+ * Uploaded files are attachments on that email. The script keeps no copy.
  *
  * Script properties:
- *   RECIPIENT          required, the inbox that receives messages
- *   UPLOAD_FOLDER_ID   required when a message has files; the Drive
- *                      folder "Formulari web uploads"
- *   SHARED_SECRET      optional; request token must match
- *   ALLOWED_ORIGINS    optional; comma-separated origins
+ *   RECIPIENT        required, the inbox that receives messages
+ *   SHARED_SECRET    optional; request token must match
+ *   ALLOWED_ORIGINS  optional; comma-separated origins
+ *
+ * Rate-limit counters use CacheService only, never Script Properties.
  */
-var MAX_BYTES = 20 * 1024 * 1024;
+var MAX_FILE_BYTES = 18 * 1024 * 1024;
+var MAX_TOTAL_BYTES = 18 * 1024 * 1024;
 var MAX_FILES = 10;
+var MAX_MESSAGE = 4000;
+var MAX_NAME = 80;
+var MAX_EMAIL = 120;
+var MAX_PHONE = 40;
+// Base64 of 18 MB is 24 MB. Leave room for the JSON around the files.
+var MAX_BODY_BYTES = 30 * 1024 * 1024;
+// Leave a margin before Apps Script's 6 minute limit.
+var RUN_BUDGET_MS = 5 * 60 * 1000 + 30 * 1000;
 
 function doGet() {
   return respond({ ok: true });
 }
 
 function doPost(e) {
+  var startedAt = Date.now();
   try {
-    return handlePost(e);
+    return handlePost(e, startedAt);
   } catch (err) {
     Logger.log("contact form failed");
     return respond({ ok: false, error: "server" });
   }
 }
 
-function handlePost(e) {
+function handlePost(e, startedAt) {
   if (!e || !e.postData || !e.postData.contents) {
     return respond({ ok: false, error: "invalid" });
   }
-  if (e.contentLength && Number(e.contentLength) > 28 * 1024 * 1024) {
+  if (e.contentLength && Number(e.contentLength) > MAX_BODY_BYTES) {
     return respond({ ok: false, error: "size" });
   }
+  if (outOfTime(startedAt)) return respond({ ok: false, error: "busy" });
 
   var data;
   try {
@@ -67,47 +82,43 @@ function handlePost(e) {
     return respond({ ok: false, error: "wait" });
   }
 
-  var name = oneLine(data.name, 80);
-  var surname = oneLine(data.surname, 80);
+  var name = oneLine(data.name, MAX_NAME);
+  var surname = oneLine(data.surname, MAX_NAME);
   var email = String(data.email || "").trim();
   var phone = String(data.phone || "").trim();
-  var message = cleanMessage(data.message, 4000);
+  var message = cleanMessage(data.message, MAX_MESSAGE);
   var lang = String(data.lang || "");
   if (lang !== "es" && lang !== "ca" && lang !== "en") lang = "es";
 
-  if (!name || !surname || !message || !validEmail(email) || !validPhone(phone)) {
+  if (name == null || surname == null || message == null) {
+    return respond({ ok: false, error: "invalid" });
+  }
+  if (!name || !message || !validEmail(email) || !validPhone(phone)) {
     return respond({ ok: false, error: "invalid" });
   }
 
-  var prepared = prepareFiles(data.files);
+  var prepared = prepareFiles(data.files, startedAt);
   if (prepared.error) return respond({ ok: false, error: prepared.error });
+  if (outOfTime(startedAt)) return respond({ ok: false, error: "busy" });
 
   if (limited(email)) return respond({ ok: false, error: "rate" });
 
-  var now = new Date();
-  var links = [];
-  if (prepared.files.length) {
-    var folderId = String(props.getProperty("UPLOAD_FOLDER_ID") || "").trim();
-    if (!/^[A-Za-z0-9_-]{10,}$/.test(folderId)) {
-      return respond({ ok: false, error: "server" });
-    }
-    var parent = DriveApp.getFolderById(folderId);
-    var folder = parent.createFolder(folderName(now, name, surname, parent));
-    prepared.files.forEach(function (file) {
-      var saved = folder.createFile(file.blob);
-      links.push({ name: saved.getName(), url: saved.getUrl() });
-    });
+  var quota;
+  try {
+    quota = MailApp.getRemainingDailyQuota();
+  } catch (err) {
+    Logger.log("contact form quota check failed");
+    return respond({ ok: false, error: "busy" });
   }
+  if (!quota || quota < 1) return respond({ ok: false, error: "busy" });
 
   var recipient = String(props.getProperty("RECIPIENT") || "").trim();
   if (!validEmail(recipient)) return respond({ ok: false, error: "server" });
 
-  var fullName = (name + " " + surname).trim();
+  var now = new Date();
+  var fullName = (name + (surname ? " " + surname : "")).trim();
   var subject = ("[Formulari web] " + fullName).substring(0, 180);
   var when = Utilities.formatDate(now, "Europe/Madrid", "yyyy-MM-dd HH:mm");
-  var origin = safeOrigin(data.origin);
-  var blobs = prepared.files.map(function (file) { return file.blob; });
-  var attached = blobBytes(blobs) <= MAX_BYTES;
   var mail = buildMail({
     name: name,
     surname: surname,
@@ -116,16 +127,20 @@ function handlePost(e) {
     message: message,
     lang: lang,
     when: when,
-    origin: origin,
-    links: links,
-    attached: attached && blobs.length > 0
+    origin: safeOrigin(data.origin),
+    files: prepared.files
   });
+  if (mail.html.length > 180 * 1024 || mail.plain.length > 180 * 1024) {
+    return respond({ ok: false, error: "invalid" });
+  }
 
-  sendMail(recipient, email, subject, mail.plain, mail.html, attached ? blobs : []);
+  var sent = sendMail(recipient, email, subject, mail.plain, mail.html, prepared.files);
+  if (sent === "too_large") return respond({ ok: false, error: "too_large" });
+  if (sent !== "ok") return respond({ ok: false, error: "server" });
   return respond({ ok: true });
 }
 
-function prepareFiles(raw) {
+function prepareFiles(raw, startedAt) {
   var files = raw || [];
   if (Object.prototype.toString.call(files) !== "[object Array]") {
     return { error: "invalid", files: [] };
@@ -135,104 +150,100 @@ function prepareFiles(raw) {
   var prepared = [];
   var total = 0;
   for (var i = 0; i < files.length; i++) {
+    if (outOfTime(startedAt)) return { error: "busy", files: [] };
     var item = files[i] || {};
     var filename = safeFileName(item.name);
     var encoded = String(item.data || "").replace(/\s/g, "");
     var size = base64Size(encoded);
-    if (!filename || size < 0) return { error: "invalid", files: [] };
-    if (!mimeAllowed(item.type, filename)) return { error: "invalid", files: [] };
+    if (!filename || size < 1) return { error: "invalid", files: [] };
+    if (!typeAllowed(item.type, filename)) return { error: "invalid", files: [] };
+    if (size > MAX_FILE_BYTES) return { error: "size", files: [] };
     total += size;
-    if (size > MAX_BYTES || total > MAX_BYTES) return { error: "size", files: [] };
+    if (total > MAX_TOTAL_BYTES) return { error: "size", files: [] };
     var bytes;
     try {
       bytes = Utilities.base64Decode(encoded);
     } catch (err) {
       return { error: "invalid", files: [] };
     }
-    if (!bytes || bytes.length !== size) return { error: "invalid", files: [] };
-    prepared.push({
-      blob: Utilities.newBlob(bytes, guessMime(item.type, filename), filename)
-    });
+    if (!bytes || bytes.length !== size || bytes.length > MAX_FILE_BYTES) {
+      return { error: "invalid", files: [] };
+    }
+    prepared.push(Utilities.newBlob(bytes, guessMime(item.type, filename), filename));
   }
   return { files: prepared };
 }
 
 function buildMail(fields) {
   var langName = fields.lang === "ca" ? "Català" : fields.lang === "en" ? "English" : "Español";
+  var names = fields.files.map(function (blob) { return blob.getName(); });
   var rows = [
     row("Nom", esc(fields.name)),
-    row("Cognoms", esc(fields.surname)),
+    row("Cognoms", esc(fields.surname || "—")),
     row("Correu electrònic", esc(fields.email)),
     row("Telèfon", esc(fields.phone || "—")),
     row("Missatge", esc(fields.message)),
     row("Idioma de la pàgina", esc(langName)),
-    row("Data", esc(fields.when + " (Europe/Madrid)"))
+    row("Data", esc(fields.when + " (Europe/Madrid)")),
+    row("Fitxers adjunts", names.length ? names.map(esc).join("<br>") : esc("—"))
   ];
   if (fields.origin) rows.push(row("Origen", esc(fields.origin)));
-  rows.push(row("Fitxers a Drive", linkList(fields.links)));
 
-  var intro = "Aquest missatge arriba del formulari de contacte del web.";
-  var note = "";
-  if (fields.links.length && fields.attached) {
-    note = "Els fitxers també s'adjunten a aquest correu.";
-  } else if (fields.links.length) {
-    note = "Els fitxers no s'adjunten al correu pel pes. Els enllaços de Drive continuen disponibles.";
-  }
-
+  var intro = "Aquest missatge arriba del formulari de contacte del web. El lloc no en guarda cap còpia.";
   var html = "<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.45;color:#221c28\">" +
     "<p>" + esc(intro) + "</p>" +
     "<table style=\"border-collapse:collapse\">" + rows.join("") + "</table>" +
-    (note ? "<p>" + esc(note) + "</p>" : "") +
     "</div>";
 
   var plain = [
     intro,
     "",
     "Nom: " + fields.name,
-    "Cognoms: " + fields.surname,
+    "Cognoms: " + (fields.surname || "—"),
     "Correu electrònic: " + fields.email,
     "Telèfon: " + (fields.phone || "—"),
     "Missatge:",
     fields.message,
     "",
     "Idioma de la pàgina: " + langName,
-    "Data: " + fields.when + " (Europe/Madrid)"
+    "Data: " + fields.when + " (Europe/Madrid)",
+    "",
+    "Fitxers adjunts:",
+    names.length ? names.join("\n") : "—"
   ];
-  if (fields.origin) plain.push("Origen: " + fields.origin);
-  plain.push("", "Fitxers a Drive:");
-  if (!fields.links.length) plain.push("—");
-  fields.links.forEach(function (link) {
-    plain.push(link.name + ": " + link.url);
-  });
-  if (note) plain.push("", note);
-
+  if (fields.origin) plain.push("", "Origen: " + fields.origin);
   return { html: html, plain: plain.join("\n") };
 }
 
 function sendMail(recipient, replyTo, subject, plain, html, blobs) {
-  var base = {
+  var options = {
     to: recipient,
     replyTo: replyTo,
     subject: subject,
     body: plain,
     htmlBody: html
   };
-  if (blobs && blobs.length) {
-    try {
-      MailApp.sendEmail({
-        to: base.to,
-        replyTo: base.replyTo,
-        subject: base.subject,
-        body: base.body,
-        htmlBody: base.htmlBody,
-        attachments: blobs
-      });
-      return;
-    } catch (err) {
-      Logger.log("contact form attachment send failed");
+  if (blobs && blobs.length) options.attachments = blobs;
+  try {
+    MailApp.sendEmail(options);
+    return "ok";
+  } catch (err) {
+    if (mailTooLarge(err)) {
+      Logger.log("contact form message too large");
+      return "too_large";
     }
+    Logger.log("contact form mail failed");
+    return "fail";
   }
-  MailApp.sendEmail(base);
+}
+
+function mailTooLarge(err) {
+  var msg = String(err && err.message || err || "").toLowerCase();
+  return msg.indexOf("too large") !== -1 || msg.indexOf("message size") !== -1 || msg.indexOf("attachment") !== -1 || (msg.indexOf("size") !== -1 && msg.indexOf("exceed") !== -1);
+}
+
+function outOfTime(startedAt) {
+  return Date.now() - startedAt > RUN_BUDGET_MS;
 }
 
 function respond(obj) {
@@ -244,23 +255,6 @@ function respond(obj) {
 function row(label, valueHtml) {
   return "<tr><th style=\"text-align:left;vertical-align:top;padding:4px 16px 4px 0;white-space:nowrap\">" +
     esc(label) + "</th><td style=\"padding:4px 0;white-space:pre-wrap\">" + valueHtml + "</td></tr>";
-}
-
-function linkList(links) {
-  if (!links.length) return esc("—");
-  return links.map(function (link) {
-    var href = safeHttps(link.url);
-    if (!href) return esc(link.name);
-    return "<a href=\"" + esc(href) + "\">" + esc(link.name) + "</a>";
-  }).join("<br>");
-}
-
-function folderName(now, name, surname, parent) {
-  var stamp = Utilities.formatDate(now, "Europe/Madrid", "yyyy-MM-dd");
-  var who = (name + " " + surname).trim() || "consulta";
-  var base = stamp + "-" + who.substring(0, 60);
-  if (!parent.getFoldersByName(base).hasNext()) return base;
-  return base + "-" + Utilities.formatDate(now, "Europe/Madrid", "HHmmss");
 }
 
 function limited(email) {
@@ -298,67 +292,62 @@ function originAllowed(props, origin) {
 }
 
 function validEmail(value) {
-  if (!value || value.length > 120) return false;
+  if (!value || value.length > MAX_EMAIL) return false;
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
 function validPhone(value) {
   if (!value) return true;
-  if (value.length > 40) return false;
+  if (value.length > MAX_PHONE) return false;
   return /^[0-9 +().-]+$/.test(value);
 }
 
 function oneLine(value, max) {
-  return String(value || "").replace(/[\u0000-\u001F\u007F]+/g, " ").replace(/\s+/g, " ").trim().substring(0, max);
+  var text = String(value || "").replace(/[\u0000-\u001F\u007F]+/g, " ").replace(/\s+/g, " ").trim();
+  if (text.length > max) return null;
+  return text;
 }
 
 function cleanMessage(value, max) {
-  return String(value || "")
+  var text = String(value || "")
     .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "")
     .replace(/\r\n/g, "\n")
-    .replace(/^\s+|\s+$/g, "")
-    .substring(0, max);
+    .replace(/^\s+|\s+$/g, "");
+  if (text.length > max) return null;
+  return text;
 }
 
-function mimeAllowed(type, filename) {
+function typeAllowed(type, filename) {
   var mime = String(type || "").toLowerCase().split(";")[0].trim();
-  if (mime.indexOf("image/") === 0 || mime.indexOf("video/") === 0 || mime === "application/pdf") return true;
-  if (mime && mime !== "application/octet-stream") return false;
-  return extensionAllowed(filename);
+  var ext = String(filename || "").toLowerCase().split(".").pop();
+  if (!mime || !ext) return false;
+  if (ext === "pdf") return mime === "application/pdf";
+  if (imageExt(ext)) return mime.indexOf("image/") === 0;
+  if (videoExt(ext)) return mime.indexOf("video/") === 0;
+  return false;
 }
 
-function extensionAllowed(filename) {
-  return /\.(pdf|png|jpe?g|gif|webp|bmp|svg|heic|heif|avif|mp4|webm|mov|m4v|avi|mkv|mpeg|mpg|3gp|ogv)$/i.test(filename || "");
+function imageExt(ext) {
+  return { jpg: 1, jpeg: 1, png: 1, gif: 1, webp: 1, bmp: 1, heic: 1, heif: 1, avif: 1, svg: 1 }[ext] === 1;
+}
+
+function videoExt(ext) {
+  return { mp4: 1, m4v: 1, webm: 1, mov: 1, avi: 1, mkv: 1, mpeg: 1, mpg: 1, "3gp": 1, ogv: 1 }[ext] === 1;
 }
 
 function guessMime(type, filename) {
   var mime = String(type || "").toLowerCase().split(";")[0].trim();
-  if (mime && mime !== "application/octet-stream") return mime;
+  if (mime) return mime;
   var ext = String(filename || "").toLowerCase().split(".").pop();
-  var map = {
-    pdf: "application/pdf",
-    png: "image/png",
-    jpg: "image/jpeg",
-    jpeg: "image/jpeg",
-    gif: "image/gif",
-    webp: "image/webp",
-    bmp: "image/bmp",
-    svg: "image/svg+xml",
-    heic: "image/heic",
-    heif: "image/heif",
-    avif: "image/avif",
-    mp4: "video/mp4",
-    webm: "video/webm",
-    mov: "video/quicktime",
-    m4v: "video/mp4",
-    avi: "video/x-msvideo",
-    mkv: "video/x-matroska",
-    mpeg: "video/mpeg",
-    mpg: "video/mpeg",
-    "3gp": "video/3gpp",
-    ogv: "video/ogg"
-  };
-  return map[ext] || "application/octet-stream";
+  if (ext === "pdf") return "application/pdf";
+  if (ext === "jpg" || ext === "jpeg") return "image/jpeg";
+  if (ext === "png") return "image/png";
+  if (ext === "gif") return "image/gif";
+  if (ext === "webp") return "image/webp";
+  if (ext === "mp4" || ext === "m4v") return "video/mp4";
+  if (ext === "webm") return "video/webm";
+  if (ext === "mov") return "video/quicktime";
+  return "application/octet-stream";
 }
 
 function base64Size(value) {
@@ -377,12 +366,6 @@ function safeFileName(name) {
   return base.substring(0, 120);
 }
 
-function safeHttps(url) {
-  var value = String(url || "");
-  if (!/^https:\/\/[^\s<>"]+$/.test(value)) return "";
-  return value;
-}
-
 function safeOrigin(value) {
   var text = String(value || "").trim();
   if (!/^https?:\/\/[A-Za-z0-9.-]+(?::\d+)?$/.test(text)) return "";
@@ -396,12 +379,6 @@ function sameText(a, b) {
   var diff = 0;
   for (var i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return diff === 0;
-}
-
-function blobBytes(blobs) {
-  var total = 0;
-  for (var i = 0; i < blobs.length; i++) total += blobs[i].getBytes().length;
-  return total;
 }
 
 function esc(value) {

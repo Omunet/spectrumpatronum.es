@@ -82,8 +82,8 @@
                   <input id="contact-name" name="name" type="text" autocomplete="given-name" required maxlength="80">
                 </div>
                 <div class="field">
-                  <label for="contact-surname"><span data-i18n="form.surname">Apellidos</span></label>
-                  <input id="contact-surname" name="surname" type="text" autocomplete="family-name" required maxlength="80">
+                  <label for="contact-surname"><span data-i18n="form.surname">Apellidos</span> <span class="opt" data-i18n="form.optional">opcional</span></label>
+                  <input id="contact-surname" name="surname" type="text" autocomplete="family-name" maxlength="80">
                 </div>
               </div>
               <div class="field">
@@ -115,6 +115,12 @@
                 <input id="contact-consent" name="consent" type="checkbox" required>
                 <label for="contact-consent"><span data-i18n="form.consentBefore">Acepto que mis datos se usen para responder a esta consulta, según la </span></label><a href="privacidad.html" target="_blank" rel="noopener" data-i18n="form.privacy">política de privacidad</a><span data-i18n="form.consentAfter">.</span>
               </p>
+              <div class="form-notice">
+                <p data-i18n="form.notice">La finalidad es responder a tu consulta. La base legal es tu consentimiento. Este sitio no guarda nada: el mensaje y los archivos se envían por correo a la asociación y se conservan solo el tiempo necesario para atender la consulta o el evento, y después se borran. Para cualquier solicitud sobre tus datos (acceso, rectificación, supresión y demás) usa este formulario. Puedes reclamar ante la AEPD.</p>
+                <p data-i18n="form.noticeAge">Si tienes menos de 14 años, necesitas el permiso de tu padre, madre o tutor.</p>
+                <p data-i18n="form.noticeSensitive">No envíes datos sensibles ni fotos o vídeos de otras personas sin su permiso.</p>
+                <p><a href="privacidad.html" target="_blank" rel="noopener" data-i18n="form.noticePolicy">Política de privacidad</a></p>
+              </div>
               <div class="form-actions">
                 <button type="submit" class="contact-send" id="contact-send" data-i18n="form.send">Enviar</button>
               </div>
@@ -146,26 +152,32 @@
 
     <div data-lang-block="es">
       <p>Este sitio no utiliza cookies, analítica ni publicidad.</p>
-      <p>Si escribes por el formulario de contacto, la asociación recibe el nombre, los apellidos, el correo electrónico, el teléfono, el mensaje y los archivos que adjuntas. La finalidad es responder a la consulta. Esos datos se envían por correo electrónico y los archivos se guardan en Google Drive (Google LLC), en una carpeta de la asociación. Se conservan el tiempo necesario para atender la consulta y, como máximo, dos años, salvo que una obligación legal exija un plazo mayor. El envío se basa en tu consentimiento, que puedes retirar cuando quieras.</p>
+      <p>Este sitio no guarda los datos del formulario. Si escribes por él, el nombre, los apellidos si los indicas, el correo electrónico, el teléfono si lo indicas, el mensaje y los archivos se envían por correo a la asociación. La finalidad es responder a la consulta. La base legal es tu consentimiento, que puedes retirar cuando quieras. El nombre, el correo electrónico y el mensaje son necesarios para poder responder. El mensaje y los archivos se conservan solo el tiempo necesario para atender la consulta o el evento, y después se borran.</p>
+      <p>Si tienes menos de 14 años, necesitas el permiso de tu padre, madre o tutor.</p>
+      <p>No envíes datos sensibles ni fotos o vídeos de otras personas sin su permiso.</p>
       <p>Está alojado en GitHub Pages (GitHub, Inc., EE. UU.), que puede registrar la dirección IP de los visitantes por motivos de seguridad y funcionamiento, conforme a la <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement">declaración de privacidad de GitHub</a> y al Marco de Privacidad de Datos UE-EE. UU.</p>
       <p>El idioma que eliges se guarda solo en tu navegador (localStorage) y puedes borrarlo en cualquier momento.</p>
-      <p>Puedes escribir por el formulario o por las redes sociales para ejercer los derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad. También puedes reclamar ante tu autoridad de protección de datos (por ejemplo, la Agencia Española de Protección de Datos, <a href="https://www.aepd.es">www.aepd.es</a>).</p>
+      <p>Puedes usar este formulario para ejercer los derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad. También puedes reclamar ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es">www.aepd.es</a>).</p>
     </div>
 
     <div data-lang-block="ca" hidden>
       <p>Aquest lloc no utilitza galetes, analítica ni publicitat.</p>
-      <p>Si escrius pel formulari de contacte, l'associació rep el nom, els cognoms, el correu electrònic, el telèfon, el missatge i els fitxers que adjuntes. La finalitat és respondre la consulta. Aquestes dades s'envien per correu electrònic i els fitxers es desen a Google Drive (Google LLC), en una carpeta de l'associació. Es conserven el temps necessari per atendre la consulta i, com a màxim, dos anys, llevat que una obligació legal n'exigeixi un termini més llarg. L'enviament es basa en el teu consentiment, que pots retirar quan vulguis.</p>
+      <p>Aquest lloc no desa les dades del formulari. Si hi escrius, el nom, els cognoms si els indiques, el correu electrònic, el telèfon si l'indiques, el missatge i els fitxers s'envien per correu a l'associació. La finalitat és respondre la consulta. La base legal és el teu consentiment, que pots retirar quan vulguis. El nom, el correu electrònic i el missatge són necessaris per poder respondre. El missatge i els fitxers es conserven només el temps necessari per atendre la consulta o l'esdeveniment, i després s'esborren.</p>
+      <p>Si tens menys de 14 anys, necessites el permís del teu pare, mare o tutor.</p>
+      <p>No enviïs dades sensibles ni fotos o vídeos d'altres persones sense el seu permís.</p>
       <p>Està allotjat a GitHub Pages (GitHub, Inc., EUA), que pot registrar l'adreça IP dels visitants per motius de seguretat i funcionament, d'acord amb la <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement">declaració de privacitat de GitHub</a> i el Marc de Privacitat de Dades UE-EUA.</p>
       <p>L'idioma que tries es desa només al teu navegador (localStorage) i el pots esborrar en qualsevol moment.</p>
-      <p>Pots escriure pel formulari o per les xarxes socials per exercir els drets d'accés, rectificació, supressió, oposició, limitació i portabilitat. També pots reclamar davant la teva autoritat de protecció de dades (per exemple, l'Agència Espanyola de Protecció de Dades, <a href="https://www.aepd.es">www.aepd.es</a>).</p>
+      <p>Pots fer servir aquest formulari per exercir els drets d'accés, rectificació, supressió, oposició, limitació i portabilitat. També pots reclamar davant l'Agència Espanyola de Protecció de Dades (<a href="https://www.aepd.es">www.aepd.es</a>).</p>
     </div>
 
     <div data-lang-block="en" hidden>
       <p>This site uses no cookies, analytics or advertising.</p>
-      <p>If you write through the contact form, the association receives your name, surname, email, phone number, message and any files you attach. The purpose is to answer the enquiry. That information is sent by email and the files are stored in Google Drive (Google LLC), in a folder belonging to the association. It is kept for as long as needed to handle the enquiry and for no more than two years, unless a legal duty requires a longer period. Sending the form is based on your consent, which you may withdraw at any time.</p>
+      <p>This site does not store form data. If you write through the contact form, your name, surname if you give it, email, phone number if you give it, message and files are sent by email to the association. The purpose is to answer the enquiry. The legal basis is your consent, which you may withdraw at any time. Your name, email and message are needed in order to reply. The message and files are kept only as long as needed to handle the enquiry or event, then deleted.</p>
+      <p>If you are under 14, you need permission from your father, mother or guardian.</p>
+      <p>Don't send sensitive data or photos or videos of other people without their permission.</p>
       <p>It is hosted on GitHub Pages (GitHub, Inc., USA), which may log visitors' IP addresses for security and operation, under <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement">GitHub's privacy statement</a> and the EU-US Data Privacy Framework.</p>
       <p>The language you choose is stored only in your browser (localStorage) and can be cleared at any time.</p>
-      <p>You can use the form or the social networks to exercise your rights of access, rectification, erasure, objection, restriction and portability. You can also complain to your data protection authority (for example, the Spanish Data Protection Agency, <a href="https://www.aepd.es">www.aepd.es</a>).</p>
+      <p>You can use this form to exercise your rights of access, rectification, erasure, objection, restriction and portability. You can also complain to the Spanish Data Protection Agency (<a href="https://www.aepd.es">www.aepd.es</a>).</p>
     </div>
   </main>
 

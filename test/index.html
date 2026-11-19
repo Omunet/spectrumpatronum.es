@@ -83,8 +83,8 @@
                   <input id="contact-name" name="name" type="text" autocomplete="given-name" required maxlength="80">
                 </div>
                 <div class="field">
-                  <label for="contact-surname"><span data-i18n="form.surname">Apellidos</span></label>
-                  <input id="contact-surname" name="surname" type="text" autocomplete="family-name" required maxlength="80">
+                  <label for="contact-surname"><span data-i18n="form.surname">Apellidos</span> <span class="opt" data-i18n="form.optional">opcional</span></label>
+                  <input id="contact-surname" name="surname" type="text" autocomplete="family-name" maxlength="80">
                 </div>
               </div>
               <div class="field">
@@ -116,6 +116,12 @@
                 <input id="contact-consent" name="consent" type="checkbox" required>
                 <label for="contact-consent"><span data-i18n="form.consentBefore">Acepto que mis datos se usen para responder a esta consulta, según la </span></label><a href="privacidad.html" target="_blank" rel="noopener" data-i18n="form.privacy">política de privacidad</a><span data-i18n="form.consentAfter">.</span>
               </p>
+              <div class="form-notice">
+                <p data-i18n="form.notice">La finalidad es responder a tu consulta. La base legal es tu consentimiento. Este sitio no guarda nada: el mensaje y los archivos se envían por correo a la asociación y se conservan solo el tiempo necesario para atender la consulta o el evento, y después se borran. Para cualquier solicitud sobre tus datos (acceso, rectificación, supresión y demás) usa este formulario. Puedes reclamar ante la AEPD.</p>
+                <p data-i18n="form.noticeAge">Si tienes menos de 14 años, necesitas el permiso de tu padre, madre o tutor.</p>
+                <p data-i18n="form.noticeSensitive">No envíes datos sensibles ni fotos o vídeos de otras personas sin su permiso.</p>
+                <p><a href="privacidad.html" target="_blank" rel="noopener" data-i18n="form.noticePolicy">Política de privacidad</a></p>
+              </div>
               <div class="form-actions">
                 <button type="submit" class="contact-send" id="contact-send" data-i18n="form.send">Enviar</button>
               </div>

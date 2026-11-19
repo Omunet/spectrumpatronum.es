@@ -6,7 +6,7 @@
   var FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbxtcZmeIK5q4sYoTOtVQhMb4HOilwVwxlZ_MkIOS4Pk_pirVBqMglRkcFSTV-sb2mTq/exec";
   // Optional. Sent only when the script property SHARED_SECRET is set to the same value.
   var FORM_TOKEN = "";
-  var MAX_BYTES = 20 * 1024 * 1024;
+  var MAX_BYTES = 18 * 1024 * 1024;
   var MAX_FILES = 10;
 
   var KEY = "sp-lang";
@@ -44,17 +44,23 @@
       "form.fileList": "Archivos adjuntos",
       "form.remove": "Quitar",
       "form.removeNamed": "Quitar {name}",
-      "form.total": "Total: {size} / 20 MB",
+      "form.total": "Total: {size} / 18 MB",
       "form.consentBefore": "Acepto que mis datos se usen para responder a esta consulta, según la ",
       "form.privacy": "política de privacidad",
       "form.consentAfter": ".",
+      "form.notice": "La finalidad es responder a tu consulta. La base legal es tu consentimiento. Este sitio no guarda nada: el mensaje y los archivos se envían por correo a la asociación y se conservan solo el tiempo necesario para atender la consulta o el evento, y después se borran. Para cualquier solicitud sobre tus datos (acceso, rectificación, supresión y demás) usa este formulario. Puedes reclamar ante la AEPD.",
+      "form.noticeAge": "Si tienes menos de 14 años, necesitas el permiso de tu padre, madre o tutor.",
+      "form.noticeSensitive": "No envíes datos sensibles ni fotos o vídeos de otras personas sin su permiso.",
+      "form.noticePolicy": "Política de privacidad",
       "form.send": "Enviar",
       "form.sending": "Enviando…",
       "form.success": "Mensaje enviado. Te responderemos lo antes posible.",
       "form.error": "No se ha podido enviar. Inténtalo de nuevo.",
       "form.wait": "Espera unos segundos y vuelve a enviarlo.",
       "form.rate": "Has enviado varios mensajes seguidos. Inténtalo más tarde.",
-      "form.size": "Los archivos superan 20 MB en total. Quita alguno para continuar.",
+      "form.busy": "No se puede enviar ahora. Inténtalo más tarde.",
+      "form.size": "Los archivos superan 18 MB en total. Para vídeos más grandes, envía un enlace en el mensaje.",
+      "form.tooLarge": "Los archivos son demasiado grandes para el correo. Envía un enlace en el mensaje.",
       "form.type": "Solo se admiten imágenes, vídeos y PDF.",
       "form.count": "Puedes adjuntar hasta 10 archivos.",
       "form.invalid": "Revisa los campos e inténtalo de nuevo.",
@@ -93,17 +99,23 @@
       "form.fileList": "Fitxers adjunts",
       "form.remove": "Treu",
       "form.removeNamed": "Treu {name}",
-      "form.total": "Total: {size} / 20 MB",
+      "form.total": "Total: {size} / 18 MB",
       "form.consentBefore": "Accepto que les meves dades s'utilitzin per respondre aquesta consulta, segons la ",
       "form.privacy": "política de privacitat",
       "form.consentAfter": ".",
+      "form.notice": "La finalitat és respondre la teva consulta. La base legal és el teu consentiment. Aquest lloc no desa res: el missatge i els fitxers s'envien per correu a l'associació i es conserven només el temps necessari per atendre la consulta o l'esdeveniment, i després s'esborren. Per a qualsevol sol·licitud sobre les teves dades (accés, rectificació, supressió i la resta) fes servir aquest formulari. Pots reclamar davant l'AEPD.",
+      "form.noticeAge": "Si tens menys de 14 anys, necessites el permís del teu pare, mare o tutor.",
+      "form.noticeSensitive": "No enviïs dades sensibles ni fotos o vídeos d'altres persones sense el seu permís.",
+      "form.noticePolicy": "Política de privacitat",
       "form.send": "Envia",
       "form.sending": "S'està enviant…",
       "form.success": "Missatge enviat. Et respondrem tan aviat com puguem.",
       "form.error": "No s'ha pogut enviar. Torna-ho a provar.",
       "form.wait": "Espera uns segons i torna-ho a enviar.",
       "form.rate": "Has enviat diversos missatges seguits. Torna-ho a provar més tard.",
-      "form.size": "Els fitxers superen 20 MB en total. Treu-ne algun per continuar.",
+      "form.busy": "Ara no es pot enviar. Torna-ho a provar més tard.",
+      "form.size": "Els fitxers superen 18 MB en total. Per a vídeos més grans, envia un enllaç al missatge.",
+      "form.tooLarge": "Els fitxers són massa grans per al correu. Envia un enllaç al missatge.",
       "form.type": "Només s'admeten imatges, vídeos i PDF.",
       "form.count": "Pots adjuntar fins a 10 fitxers.",
       "form.invalid": "Revisa els camps i torna-ho a provar.",
@@ -142,17 +154,23 @@
       "form.fileList": "Attached files",
       "form.remove": "Remove",
       "form.removeNamed": "Remove {name}",
-      "form.total": "Total: {size} / 20 MB",
+      "form.total": "Total: {size} / 18 MB",
       "form.consentBefore": "I agree that my data may be used to answer this enquiry, as described in the ",
       "form.privacy": "privacy policy",
       "form.consentAfter": ".",
+      "form.notice": "The purpose is to answer your enquiry. The legal basis is your consent. This site stores nothing: your message and files are sent by email to the association and kept only as long as needed to handle the enquiry or event, then deleted. For any request about your data (access, rectification, erasure, and so on) use this contact form. You can complain to the AEPD.",
+      "form.noticeAge": "If you are under 14, you need permission from your father, mother or guardian.",
+      "form.noticeSensitive": "Don't send sensitive data or photos or videos of other people without their permission.",
+      "form.noticePolicy": "Privacy policy",
       "form.send": "Send",
       "form.sending": "Sending…",
       "form.success": "Message sent. We will reply as soon as we can.",
       "form.error": "Could not send. Please try again.",
       "form.wait": "Wait a few seconds, then send it again.",
       "form.rate": "Several messages were sent in a row. Please try again later.",
-      "form.size": "The files are over 20 MB in total. Remove one to continue.",
+      "form.busy": "It cannot be sent right now. Please try again later.",
+      "form.size": "The files are over 18 MB in total. For larger videos, send a link in your message.",
+      "form.tooLarge": "The files are too large for email. Send a link in your message instead.",
       "form.type": "Only images, videos and PDFs are accepted.",
       "form.count": "You can attach up to 10 files.",
       "form.invalid": "Check the fields and try again.",
@@ -378,11 +396,21 @@
     return text + " MB";
   }
 
+  function fileExt(name) {
+    var parts = String(name || "").toLowerCase().split(".");
+    return parts.length > 1 ? parts.pop() : "";
+  }
+
   function fileAllowed(file) {
     if (!file || !file.size) return false;
-    var type = String(file.type || "").toLowerCase();
-    if (type.indexOf("image/") === 0 || type.indexOf("video/") === 0 || type === "application/pdf") return true;
-    return /\.(pdf|png|jpe?g|gif|webp|bmp|svg|heic|heif|avif|mp4|webm|mov|m4v|avi|mkv|mpeg|mpg|3gp|ogv)$/i.test(file.name || "");
+    var type = String(file.type || "").toLowerCase().split(";")[0].trim();
+    var ext = fileExt(file.name);
+    var images = { jpg: 1, jpeg: 1, png: 1, gif: 1, webp: 1, bmp: 1, heic: 1, heif: 1, avif: 1, svg: 1 };
+    var videos = { mp4: 1, m4v: 1, webm: 1, mov: 1, avi: 1, mkv: 1, mpeg: 1, mpg: 1, "3gp": 1, ogv: 1 };
+    if (ext === "pdf") return type === "application/pdf";
+    if (images[ext]) return type.indexOf("image/") === 0;
+    if (videos[ext]) return type.indexOf("video/") === 0;
+    return false;
   }
 
   function renderFiles() {
@@ -501,7 +529,9 @@
   function knownStatus(code) {
     if (code === "wait") return "form.wait";
     if (code === "rate") return "form.rate";
+    if (code === "busy") return "form.busy";
     if (code === "size") return "form.size";
+    if (code === "too_large") return "form.tooLarge";
     if (code === "invalid") return "form.invalid";
     return "form.error";
   }
