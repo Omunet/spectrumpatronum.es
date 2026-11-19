@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Política de privacidad — Spectrum Patronum</title>
-  <meta name="description" content="Este sitio no utiliza formularios, cookies, analítica ni publicidad, y no recoge datos personales de forma directa.">
+  <meta name="description" content="Información sobre el formulario de contacto, el alojamiento del sitio y cómo ejercer los derechos de protección de datos.">
   <meta name="theme-color" content="#0B0710">
   <meta name="color-scheme" content="dark">
   <link rel="icon" href="assets/sp-logo.svg" type="image/svg+xml">
@@ -25,7 +25,7 @@
     <nav class="social" aria-label="Social">
       <ul>
         <li>
-          <a href="https://www.instagram.com/spectrumpatronum.es" target="_blank" rel="noopener" aria-label="Instagram">
+          <a class="js-instagram" href="https://www.instagram.com/spectrumpatronum.es" target="_blank" rel="noopener" aria-label="Instagram">
             <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
               <rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"></rect>
               <circle cx="12" cy="12" r="4.15" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
@@ -60,12 +60,67 @@
             </svg>
           </a>
         </li>
-        <li>
-          <a class="js-instagram" href="https://www.instagram.com/spectrumpatronum.es" target="_blank" rel="noopener" data-i18n-aria="icon.contact" data-i18n-title="icon.contact" aria-label="Contacto" title="Contacto">
+        <li class="contact">
+          <button type="button" class="contact-btn" id="contact-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="contact-panel" data-i18n-aria="icon.contact" data-i18n-title="icon.contact" aria-label="Contacto" title="Contacto">
             <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
               <path d="M8 4.2h2.1l1.1 2.9-1.5 1a11.2 11.2 0 0 0 5.2 5.2l1-1.5 2.9 1.1v2.1c0 .7-.5 1.3-1.2 1.4A14.4 14.4 0 0 1 6.6 5.4c.1-.7.7-1.2 1.4-1.2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
             </svg>
-          </a>
+          </button>
+          <div id="contact-panel" class="contact-panel" role="dialog" aria-modal="false" aria-labelledby="contact-heading" hidden>
+            <div class="contact-head">
+              <h2 id="contact-heading" data-i18n="form.title">Contacto</h2>
+              <button type="button" class="contact-close" id="contact-close" data-i18n-aria="form.close" aria-label="Cerrar">
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+                  <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+                </svg>
+              </button>
+            </div>
+            <form id="contact-form" class="contact-form" action="#" method="post">
+              <div class="field-row">
+                <div class="field">
+                  <label for="contact-name"><span data-i18n="form.name">Nombre</span></label>
+                  <input id="contact-name" name="name" type="text" autocomplete="given-name" required maxlength="80">
+                </div>
+                <div class="field">
+                  <label for="contact-surname"><span data-i18n="form.surname">Apellidos</span></label>
+                  <input id="contact-surname" name="surname" type="text" autocomplete="family-name" required maxlength="80">
+                </div>
+              </div>
+              <div class="field">
+                <label for="contact-email"><span data-i18n="form.email">Correo electrónico</span></label>
+                <input id="contact-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="120">
+              </div>
+              <div class="field">
+                <label for="contact-phone"><span data-i18n="form.phone">Teléfono</span> <span class="opt" data-i18n="form.optional">opcional</span></label>
+                <input id="contact-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="40" pattern="[0-9 +().-]{0,40}">
+              </div>
+              <div class="field">
+                <label for="contact-message"><span data-i18n="form.message">Mensaje</span></label>
+                <textarea id="contact-message" name="message" rows="4" required maxlength="4000"></textarea>
+              </div>
+              <div class="hp" aria-hidden="true">
+                <label for="contact-company">Company</label>
+                <input id="contact-company" name="company" type="text" tabindex="-1" autocomplete="off">
+              </div>
+              <button type="button" class="attach-btn" id="contact-attach">
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                  <path d="M21.44 11.05 12.25 20.24a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <span data-i18n="form.attach">Adjuntar archivos</span>
+              </button>
+              <input id="contact-file" class="file-input" type="file" accept="image/*,video/*,application/pdf" multiple tabindex="-1" aria-hidden="true">
+              <ul class="file-list" id="contact-files" data-i18n-aria="form.fileList" aria-label="Archivos adjuntos"></ul>
+              <p class="file-total" id="contact-total" hidden></p>
+              <p class="consent">
+                <input id="contact-consent" name="consent" type="checkbox" required>
+                <label for="contact-consent"><span data-i18n="form.consentBefore">Acepto que mis datos se usen para responder a esta consulta, según la </span></label><a href="privacidad.html" target="_blank" rel="noopener" data-i18n="form.privacy">política de privacidad</a><span data-i18n="form.consentAfter">.</span>
+              </p>
+              <div class="form-actions">
+                <button type="submit" class="contact-send" id="contact-send" data-i18n="form.send">Enviar</button>
+              </div>
+              <p id="contact-status" class="form-status" role="status" aria-live="polite"></p>
+            </form>
+          </div>
         </li>
       </ul>
     </nav>
@@ -90,24 +145,27 @@
     <h1 data-i18n="privacy.heading">Política de privacidad</h1>
 
     <div data-lang-block="es">
-      <p>Este sitio no utiliza formularios, cookies, analítica ni publicidad, y no recoge datos personales de forma directa.</p>
+      <p>Este sitio no utiliza cookies, analítica ni publicidad.</p>
+      <p>Si escribes por el formulario de contacto, la asociación recibe el nombre, los apellidos, el correo electrónico, el teléfono, el mensaje y los archivos que adjuntas. La finalidad es responder a la consulta. Esos datos se envían por correo electrónico y los archivos se guardan en Google Drive (Google LLC), en una carpeta de la asociación. Se conservan el tiempo necesario para atender la consulta y, como máximo, dos años, salvo que una obligación legal exija un plazo mayor. El envío se basa en tu consentimiento, que puedes retirar cuando quieras.</p>
       <p>Está alojado en GitHub Pages (GitHub, Inc., EE. UU.), que puede registrar la dirección IP de los visitantes por motivos de seguridad y funcionamiento, conforme a la <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement">declaración de privacidad de GitHub</a> y al Marco de Privacidad de Datos UE-EE. UU.</p>
       <p>El idioma que eliges se guarda solo en tu navegador (localStorage) y puedes borrarlo en cualquier momento.</p>
-      <p>Puedes contactarnos a través de nuestras redes sociales para ejercer los derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad. También puedes reclamar ante tu autoridad de protección de datos (por ejemplo, la Agencia Española de Protección de Datos, <a href="https://www.aepd.es">www.aepd.es</a>).</p>
+      <p>Puedes escribir por el formulario o por las redes sociales para ejercer los derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad. También puedes reclamar ante tu autoridad de protección de datos (por ejemplo, la Agencia Española de Protección de Datos, <a href="https://www.aepd.es">www.aepd.es</a>).</p>
     </div>
 
     <div data-lang-block="ca" hidden>
-      <p>Aquest lloc no utilitza formularis, galetes, analítica ni publicitat, i no recull dades personals de manera directa.</p>
+      <p>Aquest lloc no utilitza galetes, analítica ni publicitat.</p>
+      <p>Si escrius pel formulari de contacte, l'associació rep el nom, els cognoms, el correu electrònic, el telèfon, el missatge i els fitxers que adjuntes. La finalitat és respondre la consulta. Aquestes dades s'envien per correu electrònic i els fitxers es desen a Google Drive (Google LLC), en una carpeta de l'associació. Es conserven el temps necessari per atendre la consulta i, com a màxim, dos anys, llevat que una obligació legal n'exigeixi un termini més llarg. L'enviament es basa en el teu consentiment, que pots retirar quan vulguis.</p>
       <p>Està allotjat a GitHub Pages (GitHub, Inc., EUA), que pot registrar l'adreça IP dels visitants per motius de seguretat i funcionament, d'acord amb la <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement">declaració de privacitat de GitHub</a> i el Marc de Privacitat de Dades UE-EUA.</p>
       <p>L'idioma que tries es desa només al teu navegador (localStorage) i el pots esborrar en qualsevol moment.</p>
-      <p>Pots contactar-nos a través de les nostres xarxes socials per exercir els drets d'accés, rectificació, supressió, oposició, limitació i portabilitat. També pots reclamar davant la teva autoritat de protecció de dades (per exemple, l'Agència Espanyola de Protecció de Dades, <a href="https://www.aepd.es">www.aepd.es</a>).</p>
+      <p>Pots escriure pel formulari o per les xarxes socials per exercir els drets d'accés, rectificació, supressió, oposició, limitació i portabilitat. També pots reclamar davant la teva autoritat de protecció de dades (per exemple, l'Agència Espanyola de Protecció de Dades, <a href="https://www.aepd.es">www.aepd.es</a>).</p>
     </div>
 
     <div data-lang-block="en" hidden>
-      <p>This site uses no forms, cookies, analytics or advertising, and does not collect personal data directly.</p>
+      <p>This site uses no cookies, analytics or advertising.</p>
+      <p>If you write through the contact form, the association receives your name, surname, email, phone number, message and any files you attach. The purpose is to answer the enquiry. That information is sent by email and the files are stored in Google Drive (Google LLC), in a folder belonging to the association. It is kept for as long as needed to handle the enquiry and for no more than two years, unless a legal duty requires a longer period. Sending the form is based on your consent, which you may withdraw at any time.</p>
       <p>It is hosted on GitHub Pages (GitHub, Inc., USA), which may log visitors' IP addresses for security and operation, under <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement">GitHub's privacy statement</a> and the EU-US Data Privacy Framework.</p>
       <p>The language you choose is stored only in your browser (localStorage) and can be cleared at any time.</p>
-      <p>You can contact us through our social networks to exercise your rights of access, rectification, erasure, objection, restriction and portability. You can also complain to your data protection authority (for example, the Spanish Data Protection Agency, <a href="https://www.aepd.es">www.aepd.es</a>).</p>
+      <p>You can use the form or the social networks to exercise your rights of access, rectification, erasure, objection, restriction and portability. You can also complain to your data protection authority (for example, the Spanish Data Protection Agency, <a href="https://www.aepd.es">www.aepd.es</a>).</p>
     </div>
   </main>
 
