@@ -2,7 +2,17 @@
 
 ## Events
 
-Public events are listed in [`events/events.json`](events/events.json). The events page reads that file and builds the month view. There is no login and nothing for visitors to edit. Change the file, then commit it. The layout does not need to change.
+The events page draws its own month view from [`events/events.json`](events/events.json). Visitors can only browse. An event shows the date, time, place, a map link, and a ticket link when there is one. Nothing on the page embeds Google Calendar, names it, or links to an event’s Google page.
+
+To fill the calendar from Google Calendar, make that calendar public and put its id in [`events/calendar.json`](events/calendar.json):
+
+```json
+{ "calendarId": "your-id@group.calendar.google.com" }
+```
+
+Use the public calendar id, not a private ical secret. The workflow `.github/workflows/sync-calendar.yml` reads the public feed and rewrites `events.json`. It runs every hour and can be started by hand. While `calendarId` is empty, the example events already in `events.json` stay as they are.
+
+You can also edit `events.json` by hand. The layout does not need to change.
 
 Each event is one object:
 

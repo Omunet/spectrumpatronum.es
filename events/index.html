@@ -140,7 +140,9 @@
 
   <script src="/js/main.js"></script>
   <script>
-    /* Month view. Event copy lives in /events/events.json — see README.md. */
+    /* Month view. Event copy lives in /events/events.json — see README.md.
+       That file can be filled from a public Google Calendar. This page never
+       links to Google Calendar and never embeds it. */
     (function () {
       "use strict";
 
@@ -274,6 +276,10 @@
         var end = event.endDate;
         var dateOpts = { weekday: "long", day: "numeric", month: "long", year: "numeric" };
         var startDate = start.toLocaleDateString(lang, dateOpts);
+        if (event.allDay) {
+          if (!end || sameDay(start, end)) return startDate;
+          return startDate + " – " + end.toLocaleDateString(lang, dateOpts);
+        }
         var startTime = timeText(start, lang);
         if (!end) return startDate + ", " + startTime;
         if (sameDay(start, end)) return startDate + ", " + startTime + " – " + timeText(end, lang);
@@ -286,11 +292,33 @@
         }).join(", ");
       }
 
+      function isGoogleCalendarUrl(value) {
+        var match = /^https?:\/\/([^\/?#]+)([^?#]*)/i.exec(String(value || "").trim());
+        if (!match) return false;
+        var host = match[1].toLowerCase().replace(/^www\./, "");
+        var path = match[2] || "";
+        if (host === "calendar.google.com") return true;
+        if (/(^|\.)google\.com$/i.test(host) && /\/calendar/i.test(path)) return true;
+        return false;
+      }
+
+      function cleanDescription(text) {
+        if (!text) return "";
+        return String(text)
+          .replace(/https?:\/\/[^\s)]+/gi, function (url) {
+            return isGoogleCalendarUrl(url) ? "" : url;
+          })
+          .replace(/[ \t]{2,}/g, " ")
+          .replace(/[ \t]+\n/g, "\n")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+      }
+
       function ticketHref(url) {
         if (typeof url !== "string") return "";
         var value = url.trim();
         if (value === "#") return "#";
-        if (/^https:\/\//i.test(value)) return value;
+        if (/^https:\/\//i.test(value) && !isGoogleCalendarUrl(value)) return value;
         return "";
       }
 
@@ -320,6 +348,9 @@
       }
 
       function buttonName(event, lang) {
+        if (event.allDay) {
+          return event.title + ", " + event.startDate.toLocaleDateString(lang, { day: "numeric", month: "long" });
+        }
         return event.title + ", " + timeText(event.startDate, lang);
       }
 
@@ -386,8 +417,8 @@
         empty.textContent = text.empty;
         document.getElementById("event-list-wrap").hidden = inMonth.length === 0;
         list.innerHTML = inMonth.map(function (event) {
-          var shortWhen = event.startDate.toLocaleDateString(lang, { weekday: "short", day: "numeric", month: "short" }) +
-            " · " + timeText(event.startDate, lang);
+          var shortWhen = event.startDate.toLocaleDateString(lang, { weekday: "short", day: "numeric", month: "short" });
+          if (!event.allDay) shortWhen += " · " + timeText(event.startDate, lang);
           return "<li><button type=\"button\" class=\"event-row\" data-event=\"" + event.index + "\">" +
             "<span class=\"event-row-when\">" + esc(shortWhen) + "</span>" +
             "<span class=\"event-row-name\">" + esc(event.title) + "</span>" +
@@ -426,8 +457,9 @@
           mapEl.textContent = text.map;
           mapEl.appendChild(hiddenOpens(text));
         }
-        descEl.hidden = !event.description;
-        descEl.textContent = event.description || "";
+        var description = cleanDescription(event.description);
+        descEl.hidden = !description;
+        descEl.textContent = description;
         var href = ticketHref(event.ticketUrl);
         ticketsEl.hidden = !href;
         ticketsEl.parentNode.hidden = !href;
@@ -551,10 +583,11 @@
           address: raw.address ? String(raw.address) : "",
           city: raw.city ? String(raw.city) : "",
           ticketUrl: raw.ticketUrl ? String(raw.ticketUrl) : "",
-          description: raw.description ? String(raw.description) : "",
+          description: cleanDescription(raw.description),
           image: raw.image ? String(raw.image) : "",
           imageAlt: raw.imageAlt ? String(raw.imageAlt) : "",
-          example: raw.example === true
+          example: raw.example === true,
+          allDay: raw.allDay === true
         };
       }
 
