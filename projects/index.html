@@ -91,7 +91,6 @@
     <h1 id="projects-heading">Proyectos</h1>
     <noscript><p class="project-fallback">Activa JavaScript para ver los proyectos.</p></noscript>
     <ul class="project-grid" id="project-grid" aria-labelledby="projects-heading"></ul>
-    <ul class="project-notes" id="project-notes" aria-label="Biografías"></ul>
   </main>
 
   <footer class="site-footer">
@@ -106,11 +105,11 @@
   <script>
     /* Projects grid.
        Add a project by appending an object to PROJECTS:
-         { name: "Name", bio: "One or two lines.", href: "https://example.com",
+         { name: "Name", href: "https://example.com",
            logo: "/assets/projects/example.jpg", alt: "Description of the logo" }
        href must be an https URL. The tile opens it in a new tab.
        A placeholder is { placeholder: true }. Replace that object when the
-       real name, bio, logo and link are ready. Placeholder wording follows
+       real name, logo and link are ready. Placeholder names follow
        the language chosen on the site. */
     (function () {
       "use strict";
@@ -118,7 +117,6 @@
       var PROJECTS = [
         {
           name: "Archmaje",
-          bio: "French DJ – metalhead soul. From Bass music roots to Progressive Psytrance and Hard Techno.",
           href: "https://archmaje.com",
           logo: "/assets/projects/archmaje.jpg",
           alt: "Hooded cat at a DJ mixer, with a reflected cat and the word MAJE"
@@ -137,35 +135,28 @@
           description: "Proyectos de Associació Spectrum Patronum.",
           heading: "Proyectos",
           placeholderName: "Nombre del proyecto",
-          placeholderBio: "Biografía breve próximamente",
           placeholderAlt: "Logotipo provisional",
-          newTab: "Se abre en una pestaña nueva",
-          notesLabel: "Biografías"
+          newTab: "Se abre en una pestaña nueva"
         },
         ca: {
           title: "Projectes — Spectrum Patronum",
           description: "Projectes de l'Associació Spectrum Patronum.",
           heading: "Projectes",
           placeholderName: "Nom del projecte",
-          placeholderBio: "Biografia breu ben aviat",
           placeholderAlt: "Logotip provisional",
-          newTab: "S'obre en una pestanya nova",
-          notesLabel: "Biografies"
+          newTab: "S'obre en una pestanya nova"
         },
         en: {
           title: "Projects — Spectrum Patronum",
           description: "Projects of Associació Spectrum Patronum.",
           heading: "Projects",
           placeholderName: "Project name",
-          placeholderBio: "Short bio coming soon",
           placeholderAlt: "Placeholder logo",
-          newTab: "Opens in a new tab",
-          notesLabel: "Short bios"
+          newTab: "Opens in a new tab"
         }
       };
 
       var grid = document.getElementById("project-grid");
-      var notes = document.getElementById("project-notes");
       var heading = document.getElementById("projects-heading");
       var desc = document.querySelector('meta[name="description"]');
 
@@ -186,11 +177,9 @@
         if (desc) desc.setAttribute("content", copy.description);
         if (heading) heading.textContent = copy.heading;
         var html = "";
-        var noteHtml = "";
         PROJECTS.forEach(function (project) {
           var placeholder = !!project.placeholder;
           var name = placeholder ? (project.name || copy.placeholderName) : project.name;
-          var bio = placeholder ? (project.bio || copy.placeholderBio) : project.bio;
           var alt = placeholder ? (project.alt || copy.placeholderAlt) : project.alt;
           var logo = project.logo || "/assets/projects/placeholder.svg";
           var mark = placeholder && !project.logo;
@@ -198,8 +187,7 @@
             (mark ? "80" : "960") + '" height="' + (mark ? "80" : "960") + '"' +
             (mark ? ' class="project-mark"' : "") + ">";
           var body = '<span class="project-logo">' + img + "</span>" +
-            '<span class="project-copy"><span class="project-name">' + esc(name) + "</span>" +
-            '<span class="project-bio"' + (placeholder ? "" : ' lang="en"') + ">" + esc(bio) + "</span></span>";
+            '<span class="project-copy"><span class="project-name">' + esc(name) + "</span></span>";
           var href = typeof project.href === "string" ? project.href : "";
           if (!placeholder && href.indexOf("https://") === 0) {
             html += '<li><a class="project-tile" href="' + esc(href) + '" target="_blank" rel="noopener noreferrer">' +
@@ -207,18 +195,8 @@
           } else {
             html += '<li><div class="project-tile is-placeholder">' + body + "</div></li>";
           }
-          var noteName = (!placeholder && href.indexOf("https://") === 0)
-            ? '<a class="project-note-name" href="' + esc(href) + '" target="_blank" rel="noopener noreferrer">' + esc(name) +
-              '<span class="visually-hidden"> (' + esc(copy.newTab) + ")</span></a>"
-            : '<span class="project-note-name">' + esc(name) + "</span>";
-          noteHtml += '<li class="project-note' + (placeholder ? " is-placeholder" : "") + '">' + noteName +
-            '<span class="project-note-bio"' + (placeholder ? "" : ' lang="en"') + ">" + esc(bio) + "</span></li>";
         });
         grid.innerHTML = html;
-        if (notes) {
-          notes.innerHTML = noteHtml;
-          notes.setAttribute("aria-label", copy.notesLabel);
-        }
       }
 
       render();
