@@ -1,0 +1,35 @@
+[
+  {
+    "title": "Example event",
+    "start": "2026-11-21T21:00:00",
+    "end": "2026-11-22T02:00:00",
+    "venue": "Example venue",
+    "address": "Example address",
+    "city": "Example city",
+    "ticketUrl": "#",
+    "description": "Example only. This is not a real event.",
+    "example": true
+  },
+  {
+    "title": "Example event",
+    "start": "2026-11-25T19:00:00",
+    "end": "2026-11-25T21:00:00",
+    "venue": "Example venue",
+    "address": "Example address",
+    "city": "Example city",
+    "ticketUrl": "#",
+    "description": "Example only. This is not a real event.",
+    "example": true
+  },
+  {
+    "title": "Example event",
+    "start": "2026-12-03T20:00:00",
+    "end": "2026-12-03T23:00:00",
+    "venue": "Example venue",
+    "address": "Example address",
+    "city": "Example city",
+    "ticketUrl": "#",
+    "description": "Example only. This is not a real event.",
+    "example": true
+  }
+]
