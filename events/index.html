@@ -128,7 +128,7 @@
         </svg>
       </button>
       <p class="event-kicker" id="event-kicker" hidden>Ejemplo</p>
-      <h2 id="event-dialog-title" tabindex="-1">Example event</h2>
+      <h2 id="event-dialog-title" tabindex="-1"></h2>
       <img class="event-photo" id="event-photo" alt="" hidden>
       <p class="event-when" id="event-when"></p>
       <p class="event-where" id="event-where"></p>
@@ -637,7 +637,7 @@
         if (!start) return null;
         return {
           index: index,
-          title: raw.title ? String(raw.title) : "Example event",
+          title: raw.title ? String(raw.title) : "",
           startDate: start,
           endDate: parseLocal(raw.end),
           venue: raw.venue ? String(raw.venue) : "",

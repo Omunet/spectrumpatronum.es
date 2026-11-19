@@ -1,6 +1,14 @@
 (function () {
   "use strict";
 
+  // Web app URL (Deploy > Web app, ends with /exec).
+  // The inbox address is not stored in this file.
+  var FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbxtcZmeIK5q4sYoTOtVQhMb4HOilwVwxlZ_MkIOS4Pk_pirVBqMglRkcFSTV-sb2mTq/exec";
+  // Optional. Sent only when the script property SHARED_SECRET is set to the same value.
+  var FORM_TOKEN = "";
+  var MAX_BYTES = 18 * 1024 * 1024;
+  var MAX_FILES = 10;
+
   var KEY = "sp-lang";
   var I18N = {
     es: {
@@ -22,8 +30,41 @@
       "footer.note": "Asociación cultural sin ánimo de lucro · Barcelona",
       "legal.privacy": "Privacidad",
       "privacy.title": "Política de privacidad — Spectrum Patronum",
-      "privacy.description": "Este sitio no utiliza formularios, cookies, analítica ni publicidad, y no recoge datos personales de forma directa.",
-      "privacy.heading": "Política de privacidad"
+      "privacy.description": "Información sobre el formulario de contacto, el alojamiento del sitio y cómo ejercer los derechos de protección de datos.",
+      "privacy.heading": "Política de privacidad",
+      "form.title": "Contacto",
+      "form.close": "Cerrar",
+      "form.name": "Nombre",
+      "form.surname": "Apellidos",
+      "form.email": "Correo electrónico",
+      "form.phone": "Teléfono",
+      "form.optional": "opcional",
+      "form.message": "Mensaje",
+      "form.attach": "Adjuntar archivos",
+      "form.fileList": "Archivos adjuntos",
+      "form.remove": "Quitar",
+      "form.removeNamed": "Quitar {name}",
+      "form.total": "Total: {size} / 18 MB",
+      "form.consentBefore": "Acepto que mis datos se usen para responder a esta consulta, según la ",
+      "form.privacy": "política de privacidad",
+      "form.consentAfter": ".",
+      "form.notice": "La finalidad es responder a tu consulta. La base legal es tu consentimiento. Este sitio no guarda nada: el mensaje y los archivos se envían por correo a la asociación y se conservan solo el tiempo necesario para atender la consulta o el evento, y después se borran. Para cualquier solicitud sobre tus datos (acceso, rectificación, supresión y demás) usa este formulario. Puedes reclamar ante la AEPD.",
+      "form.noticeAge": "Si tienes menos de 14 años, necesitas el permiso de tu padre, madre o tutor.",
+      "form.noticeSensitive": "No envíes datos sensibles ni fotos o vídeos de otras personas sin su permiso.",
+      "form.noticePolicy": "Política de privacidad",
+      "form.send": "Enviar",
+      "form.sending": "Enviando…",
+      "form.success": "Mensaje enviado. Te responderemos lo antes posible.",
+      "form.error": "No se ha podido enviar. Inténtalo de nuevo.",
+      "form.wait": "Espera unos segundos y vuelve a enviarlo.",
+      "form.rate": "Has enviado varios mensajes seguidos. Inténtalo más tarde.",
+      "form.busy": "No se puede enviar ahora. Inténtalo más tarde.",
+      "form.size": "Los archivos superan 18 MB en total. Para vídeos más grandes, envía un enlace en el mensaje.",
+      "form.tooLarge": "Los archivos son demasiado grandes para el correo. Envía un enlace en el mensaje.",
+      "form.type": "Solo se admiten imágenes, vídeos y PDF.",
+      "form.count": "Puedes adjuntar hasta 10 archivos.",
+      "form.invalid": "Revisa los campos e inténtalo de nuevo.",
+      "form.unconfigured": "El formulario no está disponible en este momento."
     },
     ca: {
       "meta.title": "Spectrum Patronum — Associació cultural",
@@ -44,8 +85,41 @@
       "footer.note": "Associació cultural sense ànim de lucre · Barcelona",
       "legal.privacy": "Privacitat",
       "privacy.title": "Política de privacitat — Spectrum Patronum",
-      "privacy.description": "Aquest lloc no utilitza formularis, galetes, analítica ni publicitat, i no recull dades personals de manera directa.",
-      "privacy.heading": "Política de privacitat"
+      "privacy.description": "Informació sobre el formulari de contacte, l'allotjament del lloc i com exercir els drets de protecció de dades.",
+      "privacy.heading": "Política de privacitat",
+      "form.title": "Contacte",
+      "form.close": "Tanca",
+      "form.name": "Nom",
+      "form.surname": "Cognoms",
+      "form.email": "Correu electrònic",
+      "form.phone": "Telèfon",
+      "form.optional": "opcional",
+      "form.message": "Missatge",
+      "form.attach": "Adjunta fitxers",
+      "form.fileList": "Fitxers adjunts",
+      "form.remove": "Treu",
+      "form.removeNamed": "Treu {name}",
+      "form.total": "Total: {size} / 18 MB",
+      "form.consentBefore": "Accepto que les meves dades s'utilitzin per respondre aquesta consulta, segons la ",
+      "form.privacy": "política de privacitat",
+      "form.consentAfter": ".",
+      "form.notice": "La finalitat és respondre la teva consulta. La base legal és el teu consentiment. Aquest lloc no desa res: el missatge i els fitxers s'envien per correu a l'associació i es conserven només el temps necessari per atendre la consulta o l'esdeveniment, i després s'esborren. Per a qualsevol sol·licitud sobre les teves dades (accés, rectificació, supressió i la resta) fes servir aquest formulari. Pots reclamar davant l'AEPD.",
+      "form.noticeAge": "Si tens menys de 14 anys, necessites el permís del teu pare, mare o tutor.",
+      "form.noticeSensitive": "No enviïs dades sensibles ni fotos o vídeos d'altres persones sense el seu permís.",
+      "form.noticePolicy": "Política de privacitat",
+      "form.send": "Envia",
+      "form.sending": "S'està enviant…",
+      "form.success": "Missatge enviat. Et respondrem tan aviat com puguem.",
+      "form.error": "No s'ha pogut enviar. Torna-ho a provar.",
+      "form.wait": "Espera uns segons i torna-ho a enviar.",
+      "form.rate": "Has enviat diversos missatges seguits. Torna-ho a provar més tard.",
+      "form.busy": "Ara no es pot enviar. Torna-ho a provar més tard.",
+      "form.size": "Els fitxers superen 18 MB en total. Per a vídeos més grans, envia un enllaç al missatge.",
+      "form.tooLarge": "Els fitxers són massa grans per al correu. Envia un enllaç al missatge.",
+      "form.type": "Només s'admeten imatges, vídeos i PDF.",
+      "form.count": "Pots adjuntar fins a 10 fitxers.",
+      "form.invalid": "Revisa els camps i torna-ho a provar.",
+      "form.unconfigured": "El formulari no està disponible en aquest moment."
     },
     en: {
       "meta.title": "Spectrum Patronum — Cultural association",
@@ -66,12 +140,53 @@
       "footer.note": "Non-profit cultural association · Barcelona",
       "legal.privacy": "Privacy",
       "privacy.title": "Privacy policy — Spectrum Patronum",
-      "privacy.description": "This site uses no forms, cookies, analytics or advertising, and does not collect personal data directly.",
-      "privacy.heading": "Privacy policy"
+      "privacy.description": "Information about the contact form, how the site is hosted, and how to exercise data protection rights.",
+      "privacy.heading": "Privacy policy",
+      "form.title": "Contact",
+      "form.close": "Close",
+      "form.name": "Name",
+      "form.surname": "Surname",
+      "form.email": "Email",
+      "form.phone": "Phone",
+      "form.optional": "optional",
+      "form.message": "Message",
+      "form.attach": "Attach files",
+      "form.fileList": "Attached files",
+      "form.remove": "Remove",
+      "form.removeNamed": "Remove {name}",
+      "form.total": "Total: {size} / 18 MB",
+      "form.consentBefore": "I agree that my data may be used to answer this enquiry, as described in the ",
+      "form.privacy": "privacy policy",
+      "form.consentAfter": ".",
+      "form.notice": "The purpose is to answer your enquiry. The legal basis is your consent. This site stores nothing: your message and files are sent by email to the association and kept only as long as needed to handle the enquiry or event, then deleted. For any request about your data (access, rectification, erasure, and so on) use this contact form. You can complain to the AEPD.",
+      "form.noticeAge": "If you are under 14, you need permission from your father, mother or guardian.",
+      "form.noticeSensitive": "Don't send sensitive data or photos or videos of other people without their permission.",
+      "form.noticePolicy": "Privacy policy",
+      "form.send": "Send",
+      "form.sending": "Sending…",
+      "form.success": "Message sent. We will reply as soon as we can.",
+      "form.error": "Could not send. Please try again.",
+      "form.wait": "Wait a few seconds, then send it again.",
+      "form.rate": "Several messages were sent in a row. Please try again later.",
+      "form.busy": "It cannot be sent right now. Please try again later.",
+      "form.size": "The files are over 18 MB in total. For larger videos, send a link in your message.",
+      "form.tooLarge": "The files are too large for email. Send a link in your message instead.",
+      "form.type": "Only images, videos and PDFs are accepted.",
+      "form.count": "You can attach up to 10 files.",
+      "form.invalid": "Check the fields and try again.",
+      "form.unconfigured": "The form is not available right now."
     }
   };
 
   var current = "es";
+  var afterApply = [];
+  var formStarted = 0;
+  var contactFiles = [];
+  var contactSending = false;
+  var contactStatusKey = "";
+  var contactStatusTone = "";
+  var contactSeq = 1;
+  var ignoreOutsideUntil = 0;
   var lang = document.querySelector(".lang");
   var langBtn = document.getElementById("lang-btn");
   var langMenu = document.getElementById("lang-menu");
@@ -106,6 +221,17 @@
     langOptions.forEach(function (btn) {
       btn.setAttribute("aria-selected", btn.getAttribute("data-lang") === next ? "true" : "false");
     });
+    afterApply.forEach(function (fn) { fn(); });
+  }
+
+  function t(key) {
+    var pack = I18N[current];
+    if (pack && pack[key] != null) return pack[key];
+    return "";
+  }
+
+  function fill(template, token, value) {
+    return String(template).split(token).join(value);
   }
 
   function remember(next) {
@@ -120,6 +246,7 @@
   }
 
   function openLang() {
+    closeContact(false);
     langMenu.hidden = false;
     langBtn.setAttribute("aria-expanded", "true");
   }
@@ -174,11 +301,398 @@
 
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape") return;
+    if (closeContact(true)) {
+      e.preventDefault();
+      return;
+    }
     if (!langMenu.hidden) {
       closeLang();
       langBtn.focus();
     }
   });
+
+  function contactRoot() {
+    return document.querySelector(".contact");
+  }
+
+  function syncContactLabel() {
+    var btn = document.getElementById("contact-btn");
+    if (!btn) return;
+    var open = btn.getAttribute("aria-expanded") === "true";
+    var key = open ? "form.close" : "icon.contact";
+    btn.setAttribute("aria-label", t(key));
+    btn.setAttribute("title", t(key));
+  }
+
+  function focusEl(el) {
+    if (!el) return;
+    try {
+      el.focus({ preventScroll: true });
+    } catch (err) {
+      el.focus();
+    }
+  }
+
+  function contactBackdrop() {
+    var backdrop = document.getElementById("contact-backdrop");
+    if (backdrop) return backdrop;
+    var header = document.querySelector(".site-header");
+    if (!header) return null;
+    backdrop = document.createElement("button");
+    backdrop.type = "button";
+    backdrop.id = "contact-backdrop";
+    backdrop.className = "contact-backdrop";
+    backdrop.tabIndex = -1;
+    backdrop.setAttribute("aria-hidden", "true");
+    backdrop.hidden = true;
+    header.appendChild(backdrop);
+    backdrop.addEventListener("click", function () {
+      closeContact(false);
+    });
+    return backdrop;
+  }
+
+  function openContact() {
+    var panel = document.getElementById("contact-panel");
+    var btn = document.getElementById("contact-btn");
+    if (!panel || !btn) return;
+    closeLang();
+    if (!formStarted) formStarted = Date.now();
+    var backdrop = contactBackdrop();
+    if (backdrop) backdrop.hidden = false;
+    panel.hidden = false;
+    btn.setAttribute("aria-expanded", "true");
+    syncContactLabel();
+    focusEl(document.getElementById("contact-name"));
+  }
+
+  function closeContact(restoreFocus) {
+    var panel = document.getElementById("contact-panel");
+    var btn = document.getElementById("contact-btn");
+    if (!panel || !btn || panel.hidden) return false;
+    panel.hidden = true;
+    var backdrop = document.getElementById("contact-backdrop");
+    if (backdrop) backdrop.hidden = true;
+    btn.setAttribute("aria-expanded", "false");
+    syncContactLabel();
+    if (restoreFocus) focusEl(btn);
+    return true;
+  }
+
+  function setStatus(key, tone) {
+    contactStatusKey = key || "";
+    contactStatusTone = tone || "";
+    var el = document.getElementById("contact-status");
+    if (!el) return;
+    el.textContent = contactStatusKey ? t(contactStatusKey) : "";
+    el.className = "form-status" + (contactStatusTone ? " is-" + contactStatusTone : "");
+  }
+
+  function formatSize(bytes) {
+    var mb = bytes / (1024 * 1024);
+    var text = mb >= 0.1 ? mb.toFixed(1) : (bytes / 1024).toFixed(0) + " KB";
+    if (mb >= 0.1 && current !== "en") text = text.replace(".", ",");
+    if (mb < 0.1) return text;
+    return text + " MB";
+  }
+
+  function fileExt(name) {
+    var parts = String(name || "").toLowerCase().split(".");
+    return parts.length > 1 ? parts.pop() : "";
+  }
+
+  function fileAllowed(file) {
+    if (!file || !file.size) return false;
+    var type = String(file.type || "").toLowerCase().split(";")[0].trim();
+    var ext = fileExt(file.name);
+    var images = { jpg: 1, jpeg: 1, png: 1, gif: 1, webp: 1, bmp: 1, heic: 1, heif: 1, avif: 1, svg: 1 };
+    var videos = { mp4: 1, m4v: 1, webm: 1, mov: 1, avi: 1, mkv: 1, mpeg: 1, mpg: 1, "3gp": 1, ogv: 1 };
+    if (ext === "pdf") return type === "application/pdf";
+    if (images[ext]) return type.indexOf("image/") === 0;
+    if (videos[ext]) return type.indexOf("video/") === 0;
+    return false;
+  }
+
+  function renderFiles() {
+    var list = document.getElementById("contact-files");
+    var totalEl = document.getElementById("contact-total");
+    if (!list) return;
+    while (list.firstChild) list.removeChild(list.firstChild);
+    var total = 0;
+    contactFiles.forEach(function (item) {
+      total += item.file.size;
+      var li = document.createElement("li");
+      var name = document.createElement("span");
+      name.className = "file-name";
+      name.textContent = item.file.name;
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "file-remove";
+      btn.setAttribute("data-id", String(item.id));
+      btn.textContent = t("form.remove");
+      btn.setAttribute("aria-label", fill(t("form.removeNamed"), "{name}", item.file.name));
+      if (contactSending) btn.disabled = true;
+      li.appendChild(name);
+      li.appendChild(btn);
+      list.appendChild(li);
+    });
+    if (!totalEl) return;
+    if (!contactFiles.length) {
+      totalEl.hidden = true;
+      totalEl.textContent = "";
+      return;
+    }
+    totalEl.hidden = false;
+    totalEl.textContent = fill(t("form.total"), "{size}", formatSize(total));
+  }
+
+  function addFiles(list) {
+    var incoming = Array.prototype.slice.call(list || []);
+    if (!incoming.length) return;
+    var next = contactFiles.slice();
+    var rejectedType = false;
+    var rejectedCount = false;
+    var rejectedSize = false;
+    incoming.forEach(function (file) {
+      if (!fileAllowed(file)) {
+        rejectedType = true;
+        return;
+      }
+      if (next.length >= MAX_FILES) {
+        rejectedCount = true;
+        return;
+      }
+      var duplicate = next.some(function (item) {
+        var prev = item.file;
+        return prev.name === file.name && prev.size === file.size && prev.lastModified === file.lastModified;
+      });
+      if (duplicate) return;
+      var total = file.size;
+      next.forEach(function (item) { total += item.file.size; });
+      if (total > MAX_BYTES) {
+        rejectedSize = true;
+        return;
+      }
+      next.push({ id: contactSeq++, file: file });
+    });
+    contactFiles = next;
+    renderFiles();
+    if (rejectedSize) setStatus("form.size", "error");
+    else if (rejectedType) setStatus("form.type", "error");
+    else if (rejectedCount) setStatus("form.count", "error");
+    else if (contactStatusKey === "form.size" || contactStatusKey === "form.type" || contactStatusKey === "form.count") setStatus("", "");
+  }
+
+  function trimField(id) {
+    var el = document.getElementById(id);
+    if (!el) return "";
+    var value = String(el.value || "").replace(/^\s+|\s+$/g, "");
+    el.value = value;
+    return value;
+  }
+
+  function readFile(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () {
+        var raw = String(reader.result || "");
+        var comma = raw.indexOf(",");
+        resolve({
+          name: file.name,
+          type: file.type || "",
+          data: comma >= 0 ? raw.slice(comma + 1) : raw
+        });
+      };
+      reader.onerror = function () { reject(new Error("read")); };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function setBusy(on) {
+    contactSending = on;
+    var form = document.getElementById("contact-form");
+    var sendBtn = document.getElementById("contact-send");
+    if (form) form.setAttribute("aria-busy", on ? "true" : "false");
+    if (sendBtn) {
+      sendBtn.disabled = on;
+      sendBtn.textContent = on ? t("form.sending") : t("form.send");
+    }
+    if (!form) return;
+    var controls = form.querySelectorAll("input, textarea, button");
+    Array.prototype.forEach.call(controls, function (control) {
+      if (control === sendBtn) return;
+      if (control.type === "file") return;
+      control.disabled = on;
+    });
+  }
+
+  function knownStatus(code) {
+    if (code === "wait") return "form.wait";
+    if (code === "rate") return "form.rate";
+    if (code === "busy") return "form.busy";
+    if (code === "size") return "form.size";
+    if (code === "too_large") return "form.tooLarge";
+    if (code === "invalid") return "form.invalid";
+    return "form.error";
+  }
+
+  function initContact() {
+    var root = contactRoot();
+    var btn = document.getElementById("contact-btn");
+    var panel = document.getElementById("contact-panel");
+    var form = document.getElementById("contact-form");
+    if (!root || !btn || !panel || !form) return;
+
+    btn.addEventListener("click", function () {
+      if (panel.hidden) openContact();
+      else closeContact(false);
+    });
+
+    var closeBtn = document.getElementById("contact-close");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function () {
+        closeContact(true);
+      });
+    }
+
+    document.querySelectorAll(".js-contact").forEach(function (link) {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openContact();
+      });
+    });
+
+    document.addEventListener("click", function (e) {
+      if (Date.now() < ignoreOutsideUntil) return;
+      if (root.contains(e.target)) return;
+      if (e.target.closest && e.target.closest(".js-contact")) return;
+      closeContact(false);
+    });
+
+    root.addEventListener("focusout", function (e) {
+      if (!e.relatedTarget) return;
+      if (!root.contains(e.relatedTarget)) closeContact(false);
+    });
+
+    var fileInput = document.getElementById("contact-file");
+    var attachBtn = document.getElementById("contact-attach");
+    if (attachBtn && fileInput) {
+      attachBtn.addEventListener("click", function () {
+        ignoreOutsideUntil = Date.now() + 2000;
+        fileInput.click();
+      });
+    }
+    if (fileInput) {
+      fileInput.addEventListener("change", function () {
+        ignoreOutsideUntil = Date.now() + 500;
+        addFiles(fileInput.files);
+        fileInput.value = "";
+      });
+    }
+    window.addEventListener("focus", function () {
+      if (Date.now() < ignoreOutsideUntil) ignoreOutsideUntil = Date.now() + 400;
+    });
+
+    var fileList = document.getElementById("contact-files");
+    if (fileList) {
+      fileList.addEventListener("click", function (e) {
+        var target = e.target.closest ? e.target.closest("button") : null;
+        if (!target || !fileList.contains(target) || contactSending) return;
+        var id = target.getAttribute("data-id");
+        contactFiles = contactFiles.filter(function (item) { return String(item.id) !== id; });
+        renderFiles();
+        if (contactStatusKey === "form.size" || contactStatusKey === "form.type" || contactStatusKey === "form.count") {
+          setStatus("", "");
+        }
+      });
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (contactSending) return;
+      trimField("contact-name");
+      trimField("contact-surname");
+      trimField("contact-email");
+      trimField("contact-phone");
+      trimField("contact-message");
+      if (!form.reportValidity()) return;
+      var total = 0;
+      contactFiles.forEach(function (item) { total += item.file.size; });
+      if (total > MAX_BYTES) {
+        setStatus("form.size", "error");
+        return;
+      }
+      if (FORM_ENDPOINT.indexOf("REPLACE_WITH") !== -1) {
+        setStatus("form.unconfigured", "error");
+        return;
+      }
+      if (!formStarted || Date.now() - formStarted < 3000) {
+        setStatus("form.wait", "error");
+        return;
+      }
+      setStatus("", "");
+      setBusy(true);
+      Promise.all(contactFiles.map(function (item) { return readFile(item.file); }))
+        .then(function (files) {
+          var payload = {
+            name: document.getElementById("contact-name").value,
+            surname: document.getElementById("contact-surname").value,
+            email: document.getElementById("contact-email").value,
+            phone: document.getElementById("contact-phone").value,
+            message: document.getElementById("contact-message").value,
+            company: (document.getElementById("contact-company") || { value: "" }).value,
+            lang: document.documentElement.lang || "es",
+            started: formStarted,
+            origin: location.origin,
+            files: files
+          };
+          if (FORM_TOKEN) payload.token = FORM_TOKEN;
+          // text/plain avoids a CORS preflight. Apps Script answers with a
+          // redirect; the browser follows it and we read the final JSON.
+          return fetch(FORM_ENDPOINT, {
+            method: "POST",
+            redirect: "follow",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload)
+          }).then(function (res) { return res.text(); });
+        })
+        .then(function (text) {
+          var data;
+          try {
+            data = JSON.parse(text);
+          } catch (err) {
+            throw new Error("bad-response");
+          }
+          if (!data || data.ok !== true) {
+            var failure = new Error("form");
+            failure.code = data && data.error;
+            throw failure;
+          }
+          form.reset();
+          contactFiles = [];
+          renderFiles();
+          formStarted = Date.now();
+          setStatus("form.success", "ok");
+        })
+        .catch(function (err) {
+          setStatus(knownStatus(err && err.code), "error");
+        })
+        .then(function () {
+          setBusy(false);
+        });
+    });
+
+    afterApply.push(function () {
+      syncContactLabel();
+      renderFiles();
+      var sendBtn = document.getElementById("contact-send");
+      if (sendBtn) sendBtn.textContent = contactSending ? t("form.sending") : t("form.send");
+      if (contactStatusKey) setStatus(contactStatusKey, contactStatusTone);
+    });
+  }
+
+  initContact();
 
   var stored = null;
   try {
