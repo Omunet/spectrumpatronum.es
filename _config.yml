@@ -1,0 +1,5 @@
+# GitHub Pages builds this site with Jekyll. These paths stay in the repo
+# but are not published on spectrumpatronum.es.
+exclude:
+  - form-backend
+  - README.md
