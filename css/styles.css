@@ -380,22 +380,8 @@ body {
   margin: 0;
 }
 
-.footer-email {
-  margin-top: 0.85rem;
-}
-
-.footer-email a {
-  color: inherit;
-  text-underline-offset: 0.22em;
-  overflow-wrap: anywhere;
-}
-
-.footer-email a:hover {
-  color: var(--text);
-}
-
 .legal-links {
-  margin-top: 0.5rem;
+  margin-top: 0.85rem;
 }
 
 .legal-links a {
