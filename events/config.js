@@ -1,10 +1,9 @@
 /* ============================================================
-   Calendar configuration — the only place to edit.
+   Calendar configuration
    Account: spectrumpatronumbcn
-   See README.md for the steps.
-   Leave both placeholders until the real values are ready.
+   The api key is public but restricted to https://spectrumpatronum.es/*
    ============================================================ */
 var SPECTRUM_CALENDAR = {
-  calendarId: "YOUR_CALENDAR_ID",
-  apiKey: "YOUR_BROWSER_API_KEY"
+  calendarId: "890da374092113830ee8f27d60a44d4d0075462dc06422bae9f9914a793f643f@group.calendar.google.com",
+  apiKey: "AIzaSyArq4LFBWyxDRT-ISSLdGEzhLTZqaDU1zg"
 };

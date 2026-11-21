@@ -379,6 +379,27 @@
         return false;
       }
 
+      /* Google Calendar stores descriptions written in its web editor as
+         HTML. DOMParser builds an inert document (no scripts run, nothing
+         loads); only its text is kept, with each link replaced by its URL. */
+      function htmlToText(value) {
+        var source = String(value || "");
+        if (!/<[a-z!\/][^>]*>/i.test(source)) return source;
+        var doc = new DOMParser().parseFromString(source, "text/html");
+        Array.prototype.forEach.call(doc.querySelectorAll("a[href]"), function (link) {
+          var href = link.getAttribute("href") || "";
+          var label = (link.textContent || "").trim();
+          link.replaceWith(!label || label === href ? href : label + " " + href);
+        });
+        Array.prototype.forEach.call(doc.querySelectorAll("br"), function (br) {
+          br.replaceWith("\n");
+        });
+        Array.prototype.forEach.call(doc.querySelectorAll("p, div, li"), function (block) {
+          block.append("\n");
+        });
+        return doc.body.textContent || "";
+      }
+
       function cleanDescription(text) {
         if (!text) return "";
         return String(text)
@@ -750,10 +771,10 @@
           if (endDate.getTime() <= parseLocal(start.iso).getTime()) endIso = "";
           else endIso = stampFromDate(endDate, true);
         }
-        var source = item.description || "";
+        var source = htmlToText(item.description);
         var ticket = ticketFromDescription(source);
-        var description = cleanDescription(source);
-        if (ticket) description = cleanDescription(description.replace(ticket, ""));
+        /* Links never show in the text; the ticket one becomes the button. */
+        var description = cleanDescription(source.replace(/https?:\/\/[^\s)]+/gi, ""));
         return {
           title: item.summary || "",
           start: start.iso,
